@@ -65,7 +65,7 @@ void SystemData::setIsGameSystemStatus()
 	// we exclude non-game systems from specific operations (i.e. the "RetroPie" system, at least)
 	// if/when there are more in the future, maybe this can be a more complex method, with a proper list
 	// but for now a simple string comparison is more performant
-	mIsGameSystem = (mName != "retropie");
+	mIsGameSystem = (mName != "emulos");
 }
 
 void SystemData::populateFolder(FileData* folder)
@@ -346,7 +346,7 @@ std::string SystemData::getConfigPath(bool forWrite)
 
 bool SystemData::isVisible()
 {
-   return (getDisplayedGameCount() > 0 || 
+   return (getDisplayedGameCount() > 0 ||
            (UIModeController::getInstance()->isUIModeFull() && mIsCollectionSystem) ||
            (mIsCollectionSystem && mName == "favorites"));
 }
@@ -494,7 +494,7 @@ void SystemData::loadTheme()
 		sysData.insert(std::pair<std::string, std::string>("system.name", getName()));
 		sysData.insert(std::pair<std::string, std::string>("system.theme", getThemeFolder()));
 		sysData.insert(std::pair<std::string, std::string>("system.fullName", getFullName()));
-		
+
 		mTheme->loadFile(sysData, path);
 	} catch(ThemeException& e)
 	{

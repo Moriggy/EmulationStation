@@ -15,7 +15,7 @@
 #include "Window.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
-	mGrid(window, Vector2i(4, 3)), mBusyAnim(window), 
+	mGrid(window, Vector2i(4, 3)), mBusyAnim(window),
 	mSearchType(type)
 {
 	addChild(&mGrid);
@@ -37,7 +37,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mResultDesc = std::make_shared<TextComponent>(mWindow, "Result desc", Font::get(FONT_SIZE_SMALL), 0x777777FF);
 	mDescContainer->addChild(mResultDesc.get());
 	mDescContainer->setAutoScroll(true);
-	
+
 	// metadata
 	auto font = Font::get(FONT_SIZE_SMALL); // this gets replaced in onSizeChanged() so its just a placeholder
 	const unsigned int mdColor = 0x777777FF;
@@ -50,12 +50,12 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mMD_Genre = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
 	mMD_Players = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
 
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RATING:", font, mdLblColor), mMD_Rating, false));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RELEASED:", font, mdLblColor), mMD_ReleaseDate));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "DEVELOPER:", font, mdLblColor), mMD_Developer));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PUBLISHER:", font, mdLblColor), mMD_Publisher));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "GENRE:", font, mdLblColor), mMD_Genre));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PLAYERS:", font, mdLblColor), mMD_Players));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PUNTUACION:", font, mdLblColor), mMD_Rating, false));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PUBLICADO:", font, mdLblColor), mMD_ReleaseDate));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "DESARROLLADOR:", font, mdLblColor), mMD_Developer));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "EDITOR:", font, mdLblColor), mMD_Publisher));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "GENERO:", font, mdLblColor), mMD_Genre));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "JUGADORES:", font, mdLblColor), mMD_Players));
 
 	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, (int)mMD_Pairs.size()*2 - 1));
 	unsigned int i = 0;
@@ -78,7 +78,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 void ScraperSearchComponent::onSizeChanged()
 {
 	mGrid.setSize(mSize);
-	
+
 	if(mSize.x() == 0 || mSize.y() == 0)
 		return;
 
@@ -87,10 +87,10 @@ void ScraperSearchComponent::onSizeChanged()
 		mGrid.setColWidthPerc(0, 0.02f); // looks better when this is higher in auto mode
 	else
 		mGrid.setColWidthPerc(0, 0.01f);
-	
+
 	mGrid.setColWidthPerc(1, 0.25f);
 	mGrid.setColWidthPerc(2, 0.25f);
-	
+
 	// row heights
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT) // show name
 		mGrid.setRowHeightPerc(0, (mResultName->getFont()->getHeight() * 1.6f) / mGrid.getSize().y()); // result name
@@ -112,12 +112,12 @@ void ScraperSearchComponent::onSizeChanged()
 
 	// metadata
 	resizeMetadata();
-	
+
 	if(mSearchType != ALWAYS_ACCEPT_FIRST_RESULT)
 		mDescContainer->setSize(mGrid.getColWidth(1)*boxartCellScale + mGrid.getColWidth(2), mResultDesc->getFont()->getHeight() * 3);
 	else
 		mDescContainer->setSize(mGrid.getColWidth(3)*boxartCellScale, mResultDesc->getFont()->getHeight() * 8);
-	
+
 	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 
 	mGrid.onSizeChanged();
@@ -234,13 +234,13 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 		// Check if the scraper used is still valid
 		if (!isValidConfiguredScraper())
 		{
-			mWindow->pushGui(new GuiMsgBox(mWindow, Utils::String::toUpper("Configured scraper is no longer available.\nPlease change the scraping source in the settings."),
-				"FINISH", mSkipCallback));
+			mWindow->pushGui(new GuiMsgBox(mWindow, Utils::String::toUpper("El scraper configurado ya no está disponible.\nPor favor, cambie la fuente de scraper en la configuracion."),
+				"TERMINAR", mSkipCallback));
 		}
 		else
 		{
 			ComponentListRow row;
-			row.addElement(std::make_shared<TextComponent>(mWindow, "NO GAMES FOUND - SKIP", font, color), true);
+			row.addElement(std::make_shared<TextComponent>(mWindow, "NO SE ENCONTRARON JUEGOS - SALTAR", font, color), true);
 
 			if(mSkipCallback)
 				row.makeAcceptInputHandler(mSkipCallback);
@@ -279,9 +279,9 @@ void ScraperSearchComponent::onSearchError(const std::string& error)
 {
 	LOG(LogInfo) << "ScraperSearchComponent search error: " << error;
 	mWindow->pushGui(new GuiMsgBox(mWindow, Utils::String::toUpper(error),
-		"RETRY", std::bind(&ScraperSearchComponent::search, this, mLastSearch),
-		"SKIP", mSkipCallback,
-		"CANCEL", mCancelCallback));
+		"REINTENTAR", std::bind(&ScraperSearchComponent::search, this, mLastSearch),
+		"OMITIR", mSkipCallback,
+		"CANCELAR", mCancelCallback));
 }
 
 int ScraperSearchComponent::getSelectedIndex()
@@ -299,7 +299,7 @@ void ScraperSearchComponent::updateInfoPane()
 	{
 		i = 0;
 	}
-	
+
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
 		ScraperSearchResult& res = mScraperResults.at(i);
@@ -401,7 +401,7 @@ void ScraperSearchComponent::update(int deltaTime)
 		auto results = mSearchHandle->getResults();
 		auto statusString = mSearchHandle->getStatusString();
 
-		// we reset here because onSearchDone in auto mode can call mSkipCallback() which can call 
+		// we reset here because onSearchDone in auto mode can call mSkipCallback() which can call
 		// another search() which will set our mSearchHandle to something important
 		mSearchHandle.reset();
 
@@ -455,10 +455,10 @@ void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
 	};
 
 	stop();
-	mWindow->pushGui(new GuiTextEditPopup(mWindow, "SEARCH FOR", 
+	mWindow->pushGui(new GuiTextEditPopup(mWindow, "BUSCAR POR",
 		// initial value is last search if there was one, otherwise the clean path name
-		params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride, 
-		searchForFunc, false, "SEARCH"));
+		params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride,
+		searchForFunc, false, "BUSCAR"));
 }
 
 std::vector<HelpPrompt> ScraperSearchComponent::getHelpPrompts()
@@ -466,7 +466,7 @@ std::vector<HelpPrompt> ScraperSearchComponent::getHelpPrompts()
 	std::vector<HelpPrompt> prompts = mGrid.getHelpPrompts();
 	if(getSelectedIndex() != -1)
 		prompts.push_back(HelpPrompt("a", "accept result"));
-	
+
 	return prompts;
 }
 

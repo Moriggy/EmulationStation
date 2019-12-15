@@ -4,7 +4,7 @@
 #include "components/MenuComponent.h"
 #include "components/TextEditComponent.h"
 
-GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, const std::string& initValue, 
+GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, const std::string& initValue,
 	const std::function<void(const std::string&)>& okCallback, bool multiLine, const char* acceptBtnText)
 	: GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 3)), mMultiLine(multiLine)
 {
@@ -21,7 +21,7 @@ GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, con
 
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, acceptBtnText, acceptBtnText, [this, okCallback] { okCallback(mText->getValue()); delete this; }));
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCEL", "discard changes", [this] { delete this; }));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCELAR", "discard changes", [this] { delete this; }));
 
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 

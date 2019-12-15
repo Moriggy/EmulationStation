@@ -47,7 +47,7 @@ void ViewController::goToStart()
 {
 	// If specific system is requested, go directly to the game list
 	auto requestedSystem = Settings::getInstance()->getString("StartupSystem");
-	if("" != requestedSystem && "retropie" != requestedSystem)
+	if("" != requestedSystem && "emulos" != requestedSystem)
 	{
 		for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++){
 			if ((*it)->getName() == requestedSystem)
@@ -65,7 +65,7 @@ void ViewController::goToStart()
 
 void ViewController::ReloadAndGoToStart()
 {
-	mWindow->renderLoadingScreen("Loading...");
+	mWindow->renderLoadingScreen("Cargando...");
 	ViewController::get()->reloadAll();
 	ViewController::get()->goToStart();
 }
@@ -281,19 +281,19 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	bool themeHasVideoView = system->getTheme()->hasView("video");
 
 	//decide type
-	GameListViewType selectedViewType = AUTOMATIC;
+	GameListViewType selectedViewType = AUTOMATICO;
 
 	std::string viewPreference = Settings::getInstance()->getString("GamelistViewStyle");
-	if (viewPreference.compare("basic") == 0)
-		selectedViewType = BASIC;
-	if (viewPreference.compare("detailed") == 0)
-		selectedViewType = DETAILED;
+	if (viewPreference.compare("basico") == 0)
+		selectedViewType = BASICO;
+	if (viewPreference.compare("detallado") == 0)
+		selectedViewType = DETALLADO;
 	if (viewPreference.compare("grid") == 0)
 		selectedViewType = GRID;
 	if (viewPreference.compare("video") == 0)
 		selectedViewType = VIDEO;
 
-	if (selectedViewType == AUTOMATIC)
+	if (selectedViewType == AUTOMATICO)
 	{
 		std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
 		for (auto it = files.cbegin(); it != files.cend(); it++)
@@ -305,7 +305,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 			}
 			else if (!(*it)->getThumbnailPath().empty())
 			{
-				selectedViewType = DETAILED;
+				selectedViewType = DETALLADO;
 				// Don't break out in case any subsequent files have video
 			}
 		}
@@ -317,13 +317,13 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 		case VIDEO:
 			view = std::shared_ptr<IGameListView>(new VideoGameListView(mWindow, system->getRootFolder()));
 			break;
-		case DETAILED:
+		case DETALLADO:
 			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
 			break;
 		case GRID:
 			view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
 			break;
-		case BASIC:
+		case BASICO:
 		default:
 			view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 			break;
@@ -437,7 +437,7 @@ void ViewController::preload()
 		{
 			i++;
 			char buffer[100];
-			sprintf (buffer, "Loading '%s' (%d/%d)",
+			sprintf (buffer, "Cargando '%s' (%d/%d)",
 				(*it)->getFullName().c_str(), i, (int)SystemData::sSystemVector.size());
 			mWindow->renderLoadingScreen(std::string(buffer));
 		}

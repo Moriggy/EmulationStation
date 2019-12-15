@@ -16,7 +16,7 @@ const int logoBuffersRight[] = { 1, 2, 5 };
 
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
 										 mViewNeedsReload(true),
-										 mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
+										 mSystemInfo(window, "INFORMACION DEL SISTEMA", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
 {
 	mCamOffset = 0;
 	mExtrasCamOffset = 0;
@@ -122,7 +122,7 @@ void SystemView::populate()
 		if (!UIModeController::getInstance()->isUIModeFull())
 		{
 			Settings::getInstance()->setString("UIMode", "Full");
-			mWindow->pushGui(new GuiMsgBox(mWindow, "The selected UI mode has nothing to show,\n returning to UI mode: FULL", "OK", nullptr));
+			mWindow->pushGui(new GuiMsgBox(mWindow, "El modo de Interfaz seleccionado no tiene nada que mostrar,\n volviendo al modo de Interfaz: FULL", "OK", nullptr));
 		}
 	}
 }
@@ -241,7 +241,7 @@ void SystemView::onCursorChanged(const CursorState& /*state*/)
 	cancelAnimation(2);
 
 	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
-	bool goFast = transition_style == "instant";
+	bool goFast = transition_style == "instantaneo";
 	const float infoStartOpacity = mSystemInfo.getOpacity() / 255.f;
 
 	Animation* infoFadeOut = new LambdaAnimation(
@@ -257,9 +257,9 @@ void SystemView::onCursorChanged(const CursorState& /*state*/)
 		std::stringstream ss;
 
 		if (!getSelected()->isGameSystem())
-			ss << "CONFIGURATION";
+			ss << "CONFIGURACION";
 		else
-			ss << gameCount << " GAMES AVAILABLE";
+			ss << gameCount << " JUEGOS DISPONIBLES";
 
 		mSystemInfo.setText(ss.str());
 	}, false, 1);
@@ -376,14 +376,14 @@ std::vector<HelpPrompt> SystemView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
 	if (mCarousel.type == VERTICAL || mCarousel.type == VERTICAL_WHEEL)
-		prompts.push_back(HelpPrompt("up/down", "choose"));
+		prompts.push_back(HelpPrompt("up/down", "escoger"));
 	else
-		prompts.push_back(HelpPrompt("left/right", "choose"));
-	prompts.push_back(HelpPrompt("a", "select"));
-	prompts.push_back(HelpPrompt("x", "random"));
+		prompts.push_back(HelpPrompt("left/right", "escoger"));
+	prompts.push_back(HelpPrompt("a", "seleccionar"));
+	prompts.push_back(HelpPrompt("x", "aleatorio"));
 
 	if (!UIModeController::getInstance()->isUIModeKid() && Settings::getInstance()->getBool("ScreenSaverControls"))
-		prompts.push_back(HelpPrompt("select", "launch screensaver"));
+		prompts.push_back(HelpPrompt("select", "screensaver"));
 
 	return prompts;
 }

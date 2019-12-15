@@ -29,9 +29,9 @@ void PowerSaver::loadWakeupTime()
 {
 	// TODO : Move this to Screensaver Class
 	std::string behaviour = Settings::getInstance()->getString("ScreenSaverBehavior");
-	if (behaviour == "random video")
+	if (behaviour == "video al azar")
 		mWakeupTimeout = Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") - getMode();
-	else if (behaviour == "slideshow")
+	else if (behaviour == "diapositivas")
 		mWakeupTimeout = Settings::getInstance()->getInt("ScreenSaverSwapImageTimeout") - getMode();
 	else // Dim and Blank
 		mWakeupTimeout = -1;
@@ -53,11 +53,11 @@ void PowerSaver::updateMode()
 {
 	std::string mode = Settings::getInstance()->getString("PowerSaverMode");
 
-	if (mode == "disabled") {
+	if (mode == "deshabilitado") {
 		mMode = DISABLED;
-	} else if (mode == "instant") {
+	} else if (mode == "instantaneo") {
 		mMode = INSTANT;
-	} else if (mode == "enhanced") {
+	} else if (mode == "mejorado") {
 		mMode = ENHANCED;
 	} else {
 		mMode = DEFAULT;
@@ -72,7 +72,7 @@ bool PowerSaver::getState()
 
 void PowerSaver::setState(bool state)
 {
-	bool ps_enabled = Settings::getInstance()->getString("PowerSaverMode") != "disabled";
+	bool ps_enabled = Settings::getInstance()->getString("PowerSaverMode") != "deshabilitado";
 	mState = ps_enabled && state;
 }
 

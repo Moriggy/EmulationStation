@@ -19,7 +19,7 @@ BusyComponent::BusyComponent(Window* window) : GuiComponent(window),
 {
 	mAnimation = std::make_shared<AnimatedImageComponent>(mWindow);
 	mAnimation->load(&BUSY_ANIMATION_DEF);
-	mText = std::make_shared<TextComponent>(mWindow, "WORKING...", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+	mText = std::make_shared<TextComponent>(mWindow, "TRABAJANDO...", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 
 	// col 0 = animation, col 1 = spacer, col 2 = text
 	mGrid.setEntry(mAnimation, Vector2i(1, 1), false, true);
@@ -46,7 +46,7 @@ void BusyComponent::onSizeChanged()
 	mGrid.setColWidthPerc(3, textWidth / mSize.x());
 
 	mGrid.setRowHeightPerc(1, textHeight / mSize.y());
-	
+
 	mBackground.fitTo(Vector2f(mGrid.getColWidth(1) + mGrid.getColWidth(2) + mGrid.getColWidth(3), textHeight + 2),
 		mAnimation->getPosition(), Vector2f(0, 0));
 }

@@ -178,11 +178,11 @@ void CollectionSystemManager::updateSystemsList()
 		// move RetroPie system to end, before auto collections
 		for(auto sysIt = SystemData::sSystemVector.cbegin(); sysIt != SystemData::sSystemVector.cend(); )
 		{
-			if ((*sysIt)->getName() == "retropie")
+			if ((*sysIt)->getName() == "emulos")
 			{
-				SystemData* retroPieSystem = (*sysIt);
+				SystemData* emulosSystem = (*sysIt);
 				sysIt = SystemData::sSystemVector.erase(sysIt);
-				SystemData::sSystemVector.push_back(retroPieSystem);
+				SystemData::sSystemVector.push_back(emulosSystem);
 				break;
 			}
 			else
@@ -284,7 +284,7 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 			trimCollectionCount(rootFolder, LAST_PLAYED_MAX);
 			ViewController::get()->onFileChanged(rootFolder, FILE_METADATA_CHANGED);
 		}
-		else 
+		else
 			ViewController::get()->onFileChanged(rootFolder, FILE_SORTED);
 	}
 }
@@ -438,13 +438,13 @@ void CollectionSystemManager::setEditMode(std::string collectionName)
 	// if it's bundled, this needs to be the bundle system
 	mEditingCollectionSystemData = sysData;
 
-	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Editing the '" + Utils::String::toUpper(collectionName) + "' Collection. Add/remove games with Y.", 10000);
+	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Editando la Coleccion '" + Utils::String::toUpper(collectionName) + "' .Añade/elimina juegos con Y.", 10000);
 	mWindow->setInfoPopup(s);
 }
 
 void CollectionSystemManager::exitEditMode()
 {
-	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Finished editing the '" + mEditingCollection + "' Collection.", 4000);
+	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Terminada la edicion de la coleccion '" + mEditingCollection + "' .", 4000);
 	mWindow->setInfoPopup(s);
 	mIsEditingCustom = false;
 	mEditingCollection = "Favorites";
@@ -525,11 +525,11 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 		}
 		if (adding)
 		{
-			s = new GuiInfoPopup(mWindow, "Added '" + Utils::String::removeParenthesis(name) + "' to '" + Utils::String::toUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "Añadido '" + Utils::String::removeParenthesis(name) + "' a '" + Utils::String::toUpper(sysName) + "'", 4000);
 		}
 		else
 		{
-			s = new GuiInfoPopup(mWindow, "Removed '" + Utils::String::removeParenthesis(name) + "' from '" + Utils::String::toUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "Eliminado '" + Utils::String::removeParenthesis(name) + "' desde '" + Utils::String::toUpper(sysName) + "'", 4000);
 		}
 		mWindow->setInfoPopup(s);
 		return true;
@@ -575,7 +575,7 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 {
 	FileData* rootFolder = sys->getRootFolder();
 
-	std::string desc = "This collection is empty.";
+	std::string desc = "Esta coleccion esta vacia.";
 	std::string rating = "0";
 	std::string players = "1";
 	std::string releasedate = "N/A";
@@ -617,11 +617,11 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 					games_list += "'" + file->getName() + "'";
 					break;
 				case 4:
-					games_list += " among other titles.";
+					games_list += " entre otros titulos.";
 			}
 		}
 
-		desc = "This collection contains " + std::to_string(games_counter) + " games, including " + games_list;
+		desc = "Esta coleccion contiene " + std::to_string(games_counter) + " juegos, incluidos " + games_list;
 
 		FileData* randomGame = sys->getRandomGame();
 

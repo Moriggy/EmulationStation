@@ -4,8 +4,8 @@
 #include "utils/StringUtil.h"
 #include "Renderer.h"
 
-DateTimeEditComponent::DateTimeEditComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
-	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
+DateTimeEditComponent::DateTimeEditComponent(Window* window, DisplayMode dispMode) : GuiComponent(window),
+	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0),
 	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT)), mUppercase(false), mAutoSize(true)
 {
 	updateTextCache();
@@ -71,7 +71,7 @@ bool DateTimeEditComponent::input(InputConfig* config, Input input)
 					new_tm.tm_mon = 0;
 				else if(new_tm.tm_mon < 0)
 					new_tm.tm_mon = 11;
-				
+
 			}
 			else if(mEditIndex == 1)
 			{
@@ -98,7 +98,7 @@ bool DateTimeEditComponent::input(InputConfig* config, Input input)
 				new_tm.tm_mday = days_in_month;
 
 			mTime = new_tm;
-			
+
 			updateTextCache();
 			return true;
 		}
@@ -110,7 +110,7 @@ bool DateTimeEditComponent::input(InputConfig* config, Input input)
 				mEditIndex--;
 			return true;
 		}
-		
+
 		if(config->isMappedLike("left", input))
 		{
 			mEditIndex--;
@@ -160,7 +160,7 @@ void DateTimeEditComponent::render(const Transform4x4f& parentTrans)
 		{
 			if(mEditIndex >= 0 && (unsigned int)mEditIndex < mCursorBoxes.size())
 			{
-				Renderer::drawRect((int)mCursorBoxes[mEditIndex][0], (int)mCursorBoxes[mEditIndex][1], 
+				Renderer::drawRect((int)mCursorBoxes[mEditIndex][0], (int)mCursorBoxes[mEditIndex][1],
 					(int)mCursorBoxes[mEditIndex][2], (int)mCursorBoxes[mEditIndex][3], 0x00000022);
 			}
 		}
@@ -201,13 +201,15 @@ std::string DateTimeEditComponent::getDisplayString(DisplayMode mode) const
 		fmt = "%m/%d/%Y";
 		break;
 	case DISP_DATE_TIME:
+		if(mTime.getTime() == 0)
+			return "desconocido";
 		fmt = "%m/%d/%Y %H:%M:%S";
 		break;
 	case DISP_RELATIVE_TO_NOW:
 		{
 			//relative time
 			if(mTime.getTime() == 0)
-				return "never";
+				return "nunca";
 
 			Utils::Time::DateTime now(Utils::Time::now());
 			Utils::Time::Duration dur(now.getTime() - mTime.getTime());
@@ -215,21 +217,18 @@ std::string DateTimeEditComponent::getDisplayString(DisplayMode mode) const
 			char buf[64];
 
 			if(dur.getDays() > 0)
-				sprintf(buf, "%d day%s ago", dur.getDays(), (dur.getDays() > 1) ? "s" : "");
+				sprintf(buf, "Hace %d day%s", dur.getDays(), (dur.getDays() > 1) ? "s" : "");
 			else if(dur.getHours() > 0)
-				sprintf(buf, "%d hour%s ago", dur.getHours(), (dur.getHours() > 1) ? "s" : "");
+				sprintf(buf, "Hace %d hora%s", dur.getHours(), (dur.getHours() > 1) ? "s" : "");
 			else if(dur.getMinutes() > 0)
-				sprintf(buf, "%d minute%s ago", dur.getMinutes(), (dur.getMinutes() > 1) ? "s" : "");
+				sprintf(buf, "Hace %d minuto%s", dur.getMinutes(), (dur.getMinutes() > 1) ? "s" : "");
 			else
-				sprintf(buf, "%d second%s ago", dur.getSeconds(), (dur.getSeconds() > 1) ? "s" : "");
-			
+				sprintf(buf, "Hace %d segundo%s", dur.getSeconds(), (dur.getSeconds() > 1) ? "s" : "");
+
 			return std::string(buf);
 		}
 		break;
 	}
-	
-	if(mTime.getTime() == 0)
-		return "unknown";
 
 	return Utils::Time::timeToString(mTime, fmt);
 }
@@ -317,7 +316,7 @@ void DateTimeEditComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 		return;
 
 	// We set mAutoSize BEFORE calling GuiComponent::applyTheme because it calls
-	// setSize(), which will call updateTextCache(), which will reset mSize if 
+	// setSize(), which will call updateTextCache(), which will reset mSize if
 	// mAutoSize == true, ignoring the theme's value.
 	if(properties & ThemeFlags::SIZE)
 		mAutoSize = !elem->has("size");

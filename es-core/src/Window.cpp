@@ -119,7 +119,7 @@ void Window::input(InputConfig* config, Input input)
 {
 	if (mScreenSaver) {
 		if(mScreenSaver->isScreenSaverActive() && Settings::getInstance()->getBool("ScreenSaverControls") &&
-		   (Settings::getInstance()->getString("ScreenSaverBehavior") == "random video"))
+		   (Settings::getInstance()->getString("ScreenSaverBehavior") == "video al azar"))
 		{
 			if(mScreenSaver->getCurrentGame() != NULL && (config->isMappedLike("right", input) || config->isMappedTo("start", input) || config->isMappedTo("select", input)))
 			{
@@ -222,7 +222,7 @@ void Window::update(int deltaTime)
 
 	if(peekGui())
 		peekGui()->update(deltaTime);
-	
+
 	// Update the screensaver
 	if (mScreenSaver)
 		mScreenSaver->update(deltaTime);
@@ -260,7 +260,7 @@ void Window::render()
 	unsigned int screensaverTime = (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime");
 	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 		startScreenSaver();
-	
+
 	// Always call the screensaver render function regardless of whether the screensaver is active
 	// or not because it may perform a fade on transition
 	renderScreenSaver();
@@ -269,7 +269,7 @@ void Window::render()
 	{
 		mInfoPopup->render(transform);
 	}
-	
+
 	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 	{
 		if (!isProcessing() && mAllowSleep && (!mScreenSaver || mScreenSaver->allowSleep()))

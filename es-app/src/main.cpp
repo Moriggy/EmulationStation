@@ -39,7 +39,7 @@ bool parseArgs(int argc, char* argv[])
 		{
 			if(i >= argc - 2)
 			{
-				std::cerr << "Invalid resolution supplied.";
+				std::cerr << "Resolucion suministrada no valida.";
 				return false;
 			}
 
@@ -52,7 +52,7 @@ bool parseArgs(int argc, char* argv[])
 		{
 			if(i >= argc - 2)
 			{
-				std::cerr << "Invalid screensize supplied.";
+				std::cerr << "Tamaño de pantalla suministrado no valido.";
 				return false;
 			}
 
@@ -311,9 +311,9 @@ int main(int argc, char* argv[])
 		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
 		if(splashScreen)
 		{
-			std::string progressText = "Loading...";
+			std::string progressText = "Cargando...";
 			if (splashScreenProgress)
-				progressText = "Loading system config...";
+				progressText = "Cargando configuracion de sistema...";
 			window.renderLoadingScreen(progressText);
 		}
 	}
@@ -333,7 +333,7 @@ int main(int argc, char* argv[])
 		// we can't handle es_systems.cfg file problems inside ES itself, so display the error message then quit
 		window.pushGui(new GuiMsgBox(&window,
 			errorMsg,
-			"QUIT", [] {
+			"SALIR", [] {
 				SDL_Event* quit = new SDL_Event();
 				quit->type = SDL_QUIT;
 				SDL_PushEvent(quit);
@@ -354,7 +354,7 @@ int main(int argc, char* argv[])
 	ViewController::get()->preload();
 
 	if(splashScreen && splashScreenProgress)
-		window.renderLoadingScreen("Done.");
+		window.renderLoadingScreen("Hecho.");
 
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)

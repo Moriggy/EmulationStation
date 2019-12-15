@@ -92,16 +92,16 @@ void Settings::setDefaults()
 		mIntMap["MaxVRAM"] = 100;
 	#endif
 
-	mStringMap["TransitionStyle"] = "fade";
+	mStringMap["TransitionStyle"] = "instantaneo";
 	mStringMap["ThemeSet"] = "";
-	mStringMap["ScreenSaverBehavior"] = "dim";
+	mStringMap["ScreenSaverBehavior"] = "oscurecer";
 	mStringMap["Scraper"] = "TheGamesDB";
-	mStringMap["GamelistViewStyle"] = "automatic";
+	mStringMap["GamelistViewStyle"] = "automatico";
 
 	mBoolMap["ScreenSaverControls"] = true;
-	mStringMap["ScreenSaverGameInfo"] = "never";
+	mStringMap["ScreenSaverGameInfo"] = "nunca";
 	mBoolMap["StretchVideoOnScreenSaver"] = false;
-	mStringMap["PowerSaverMode"] = "disabled";
+	mStringMap["PowerSaverMode"] = "deshabilitado";
 
 	mIntMap["ScreenSaverSwapImageTimeout"] = 10000;
 	mBoolMap["SlideshowScreenSaverStretch"] = false;

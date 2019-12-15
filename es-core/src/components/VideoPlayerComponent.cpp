@@ -181,7 +181,7 @@ void VideoPlayerComponent::startVideo()
 						argv[6] = "stretch";
 					}
 
-					if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
+					if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "siempre")
 					{
 						// if we have chosen to render subtitles
 						argv[15] = "--subtitles";
@@ -254,4 +254,3 @@ void VideoPlayerComponent::stopVideo()
 }
 
 #endif
-

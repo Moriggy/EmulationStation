@@ -100,7 +100,7 @@ private:
 					mParent->onSelectedChanged();
 				});
 
-				mMenu.addButton("NO SELECCIONAR NINGUNO", "select none", [this, checkboxes] {
+				mMenu.addButton("DESELECCIONAR TODOS", "select none", [this, checkboxes] {
 					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
 					{
 						mParent->mEntries.at(i).selected = false;
@@ -128,7 +128,7 @@ private:
 		std::vector<HelpPrompt> getHelpPrompts() override
 		{
 			auto prompts = mMenu.getHelpPrompts();
-			prompts.push_back(HelpPrompt("b", "back"));
+			prompts.push_back(HelpPrompt("b", "atras"));
 			return prompts;
 		}
 	};
@@ -322,7 +322,7 @@ private:
 		if(!mMultiSelect)
 			prompts.push_back(HelpPrompt("left/right", "change"));
 
-		prompts.push_back(HelpPrompt("a", "select"));
+		prompts.push_back(HelpPrompt("a", "seleccionar"));
 		return prompts;
 	}
 

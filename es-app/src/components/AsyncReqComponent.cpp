@@ -3,11 +3,11 @@
 #include "HttpReq.h"
 #include "Renderer.h"
 
-AsyncReqComponent::AsyncReqComponent(Window* window, std::shared_ptr<HttpReq> req, std::function<void(std::shared_ptr<HttpReq>)> onSuccess, std::function<void()> onCancel) 
-	: GuiComponent(window), 
+AsyncReqComponent::AsyncReqComponent(Window* window, std::shared_ptr<HttpReq> req, std::function<void(std::shared_ptr<HttpReq>)> onSuccess, std::function<void()> onCancel)
+	: GuiComponent(window),
 	mSuccessFunc(onSuccess), mCancelFunc(onCancel), mTime(0), mRequest(req)
 {
-	
+
 }
 
 bool AsyncReqComponent::input(InputConfig* config, Input input)
@@ -48,6 +48,6 @@ void AsyncReqComponent::render(const Transform4x4f& /*parentTrans*/)
 std::vector<HelpPrompt> AsyncReqComponent::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("b", "cancel"));
+	prompts.push_back(HelpPrompt("b", "cancelar"));
 	return prompts;
 }

@@ -140,16 +140,16 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 
 	if(!scraperParams.system->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
-		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SCRAPEAR", "scrape", std::bind(&GuiMetaDataEd::fetch, this)));
+		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SCRAPEAR", "scrapear", std::bind(&GuiMetaDataEd::fetch, this)));
 
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "GUARDAR", "save", [&] { save(); delete this; }));
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCELAR", "cancel", [&] { delete this; }));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "GUARDAR", "guardar", [&] { save(); delete this; }));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCELAR", "cancelar", [&] { delete this; }));
 
 	if(mDeleteFunc)
 	{
 		auto deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
 		auto deleteBtnFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBox(mWindow, "ESTO ELIMINARÁ EL ARCHIVO DEL JUEGO(S) ACTUAL!\nARE YOU SURE?", "SI", deleteFileAndSelf, "NO", nullptr)); };
-		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "BORRAR", "delete", deleteBtnFunc));
+		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "BORRAR", "borrar", deleteBtnFunc));
 	}
 
 	mButtons = makeButtonGrid(mWindow, buttons);
@@ -277,7 +277,7 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiMetaDataEd::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mGrid.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("start", "close"));
+	prompts.push_back(HelpPrompt("b", "atras"));
+	prompts.push_back(HelpPrompt("start", "cerrar"));
 	return prompts;
 }

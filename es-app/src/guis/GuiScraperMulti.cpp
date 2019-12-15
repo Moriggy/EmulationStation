@@ -49,12 +49,12 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 
 	if(approveResults)
 	{
-		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "ENTRADA", "search", [&] {
+		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "ENTRADA", "buscar", [&] {
 			mSearchComp->openInputScreen(mSearchQueue.front());
 			mGrid.resetCursor();
 		}));
 
-		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "OMITIR", "skip", [&] {
+		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "OMITIR", "omitir", [&] {
 			skip();
 			mGrid.resetCursor();
 		}));

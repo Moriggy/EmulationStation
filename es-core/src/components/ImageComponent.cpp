@@ -46,7 +46,7 @@ void ImageComponent::resize()
 	}else{
 		// SVG rasterization is determined by height (see SVGResource.cpp), and rasterization is done in terms of pixels
 		// if rounding is off enough in the rasterization step (for images with extreme aspect ratios), it can cause cutoff when the aspect ratio breaks
-		// so, we always make sure the resultant height is an integer to make sure cutoff doesn't happen, and scale width from that 
+		// so, we always make sure the resultant height is an integer to make sure cutoff doesn't happen, and scale width from that
 		// (you'll see this scattered throughout the function)
 		// this is probably not the best way, so if you're familiar with this problem and have a better solution, please make a pull request!
 
@@ -63,7 +63,7 @@ void ImageComponent::resize()
 				mSize[1] = Math::min(Math::round(mSize[1] *= resizeScale.x()), mTargetSize.y());
 			}else{
 				mSize[1] = Math::round(mSize[1] * resizeScale.y()); // this will be mTargetSize.y(). We can't exceed it.
-				
+
 				// for SVG rasterization, always calculate width from rounded height (see comment above)
 				// we need to make sure we're not creating an image larger than max size
 				mSize[0] = Math::min((mSize[1] / textureSize.y()) * textureSize.x(), mTargetSize.x());
@@ -152,7 +152,7 @@ void ImageComponent::setImage(const char* path, size_t length, bool tile)
 
 	mTexture = TextureResource::get("", tile);
 	mTexture->initFromMemory(path, length);
-	
+
 	resize();
 }
 
@@ -421,7 +421,7 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	}
 
 	Vector2f scale = getParent() ? getParent()->getSize() : Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-	
+
 	if(properties & POSITION && elem->has("pos"))
 	{
 		Vector2f denormalized = elem->get<Vector2f>("pos") * scale;
@@ -471,6 +471,6 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()
 {
 	std::vector<HelpPrompt> ret;
-	ret.push_back(HelpPrompt("a", "select"));
+	ret.push_back(HelpPrompt("a", "seleccionar"));
 	return ret;
 }

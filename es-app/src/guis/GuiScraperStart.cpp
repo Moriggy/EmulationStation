@@ -34,8 +34,8 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mApproveResults->setState(true);
 	mMenu.addWithLabel("Decidir en caso de conflicto", mApproveResults);
 
-	mMenu.addButton("COMENZAR", "start", std::bind(&GuiScraperStart::pressedStart, this));
-	mMenu.addButton("ATRAS", "back", [&] { delete this; });
+	mMenu.addButton("COMENZAR", "comenzar", std::bind(&GuiScraperStart::pressedStart, this));
+	mMenu.addButton("ATRAS", "atras", [&] { delete this; });
 
 	mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 }
@@ -122,7 +122,7 @@ bool GuiScraperStart::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiScraperStart::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("start", "close"));
+	prompts.push_back(HelpPrompt("b", "atras"));
+	prompts.push_back(HelpPrompt("start", "cerrar"));
 	return prompts;
 }

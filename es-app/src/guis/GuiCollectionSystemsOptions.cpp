@@ -83,7 +83,7 @@ void GuiCollectionSystemsOptions::initializeMenu()
 		mMenu.addRow(row);
 	}
 
-	mMenu.addButton("ATRAS", "back", std::bind(&GuiCollectionSystemsOptions::applySettings, this));
+	mMenu.addButton("ATRAS", "atras", std::bind(&GuiCollectionSystemsOptions::applySettings, this));
 
 	mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 }
@@ -209,6 +209,6 @@ bool GuiCollectionSystemsOptions::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiCollectionSystemsOptions::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("b", "atras"));
 	return prompts;
 }

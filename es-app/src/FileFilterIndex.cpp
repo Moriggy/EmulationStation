@@ -15,11 +15,11 @@ FileFilterIndex::FileFilterIndex()
 	clearAllFilters();
 	FilterDataDecl filterDecls[] = {
 		//type 				//allKeys 				//filteredBy 		//filteredKeys 				//primaryKey 	//hasSecondaryKey 	//secondaryKey 	//menuLabel
-		{ FAVORITES_FILTER, &favoritesIndexAllKeys, &filterByFavorites,	&favoritesIndexFilteredKeys,"favorite",		false,				"",				"FAVORITES"	},
-		{ GENRE_FILTER, 	&genreIndexAllKeys, 	&filterByGenre,		&genreIndexFilteredKeys, 	"genre",		true,				"genre",		"GENERO"	},
-		{ PLAYER_FILTER, 	&playersIndexAllKeys, 	&filterByPlayers,	&playersIndexFilteredKeys, 	"players",		false,				"",				"JUGADORES"	},
-		{ PUBDEV_FILTER, 	&pubDevIndexAllKeys, 	&filterByPubDev,	&pubDevIndexFilteredKeys, 	"developer",	true,				"publisher",	"EDITOR / DESAROLLADOR"	},
-		{ RATINGS_FILTER, 	&ratingsIndexAllKeys, 	&filterByRatings,	&ratingsIndexFilteredKeys, 	"rating",		false,				"",				"PUNTUACION"	},
+		{ FAVORITES_FILTER, &favoritesIndexAllKeys, &filterByFavorites,	&favoritesIndexFilteredKeys,"favorito",		false,				"",				"FAVORITES"	},
+		{ GENRE_FILTER, 	&genreIndexAllKeys, 	&filterByGenre,		&genreIndexFilteredKeys, 	"genero",		true,				"genre",		"GENERO"	},
+		{ PLAYER_FILTER, 	&playersIndexAllKeys, 	&filterByPlayers,	&playersIndexFilteredKeys, 	"jugadores",		false,				"",				"JUGADORES"	},
+		{ PUBDEV_FILTER, 	&pubDevIndexAllKeys, 	&filterByPubDev,	&pubDevIndexFilteredKeys, 	"desarrollador",	true,				"publisher",	"EDITOR / DESAROLLADOR"	},
+		{ RATINGS_FILTER, 	&ratingsIndexAllKeys, 	&filterByRatings,	&ratingsIndexFilteredKeys, 	"puntuacion",		false,				"",				"PUNTUACION"	},
 		{ KIDGAME_FILTER, 	&kidGameIndexAllKeys, 	&filterByKidGame,	&kidGameIndexFilteredKeys, 	"kidgame",		false,				"",				"KIDGAME" },
 		{ HIDDEN_FILTER, 	&hiddenIndexAllKeys, 	&filterByHidden,	&hiddenIndexFilteredKeys, 	"hidden",		false,				"",				"HIDDEN" }
 	};

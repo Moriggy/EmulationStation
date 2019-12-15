@@ -87,11 +87,11 @@ private:
 				mMenu.addRow(row, (!mParent->mMultiSelect && it->selected));
 			}
 
-			mMenu.addButton("ATRAS", "accept", [this] { delete this; });
+			mMenu.addButton("ATRAS", "aceptar", [this] { delete this; });
 
 			if(mParent->mMultiSelect)
 			{
-				mMenu.addButton("SELECCIONAR TODO", "select all", [this, checkboxes] {
+				mMenu.addButton("SELECCIONAR TODO", "seleccionar todo", [this, checkboxes] {
 					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
 					{
 						mParent->mEntries.at(i).selected = true;
@@ -100,7 +100,7 @@ private:
 					mParent->onSelectedChanged();
 				});
 
-				mMenu.addButton("DESELECCIONAR TODOS", "select none", [this, checkboxes] {
+				mMenu.addButton("DESELECCIONAR TODOS", "deseleccionar todos", [this, checkboxes] {
 					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
 					{
 						mParent->mEntries.at(i).selected = false;
@@ -320,7 +320,7 @@ private:
 	{
 		std::vector<HelpPrompt> prompts;
 		if(!mMultiSelect)
-			prompts.push_back(HelpPrompt("left/right", "change"));
+			prompts.push_back(HelpPrompt("left/right", "cambiar"));
 
 		prompts.push_back(HelpPrompt("a", "seleccionar"));
 		return prompts;

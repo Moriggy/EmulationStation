@@ -14,8 +14,7 @@
 # Dependency makefiles
 *.d
 
-# Compiled executable
-emulationstation
+
 
 # build directory
 build

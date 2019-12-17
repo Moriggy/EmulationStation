@@ -121,7 +121,7 @@ void Settings::setDefaults()
 		mStringMap["SubtitleFont"] = "/usr/share/fonts/truetype/freefont/FreeSans.ttf";
 		mStringMap["SubtitleItalicFont"] = "/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf";
 		mIntMap["SubtitleSize"] = 55;
-		mStringMap["SubtitleAlignment"] = "left";
+		mStringMap["SubtitleAlignment"] = "izquierda";
 	#else
 		mBoolMap["ScreenSaverOmxPlayer"] = false;
 	#endif

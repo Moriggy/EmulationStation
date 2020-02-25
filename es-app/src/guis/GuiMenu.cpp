@@ -18,6 +18,7 @@
 #include "VolumeControl.h"
 #include <SDL_events.h>
 #include <algorithm>
+#include "platform.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MENU EmulOS"), mVersion(window)
 {
@@ -400,10 +401,18 @@ void GuiMenu::openOtherSettings()
 	});
 
 	// gamelists
-	auto save_gamelists = std::make_shared<SwitchComponent>(mWindow);
-	save_gamelists->setState(Settings::getInstance()->getBool("SaveGamelistsOnExit"));
-	s->addWithLabel("GUARDAR METADATOS AL SALIR", save_gamelists);
-	s->addSaveFunc([save_gamelists] { Settings::getInstance()->setBool("SaveGamelistsOnExit", save_gamelists->getState()); });
+	auto gamelistsSaveMode = std::make_shared< OptionListComponent<std::string> >(mWindow, "SAVE METADATA", false);
+	std::vector<std::string> saveModes;
+	saveModes.push_back("al salir");
+	saveModes.push_back("siempre");
+	saveModes.push_back("nunca");
+
+	for(auto it = saveModes.cbegin(); it != saveModes.cend(); it++)
+		gamelistsSaveMode->add(*it, *it, Settings::getInstance()->getString("SaveGamelistsMode") == *it);
+	s->addWithLabel("SAVE METADATA", gamelistsSaveMode);
+	s->addSaveFunc([gamelistsSaveMode] {
+		Settings::getInstance()->setString("SaveGamelistsMode", gamelistsSaveMode->getSelected());
+	});
 
 	auto parse_gamelists = std::make_shared<SwitchComponent>(mWindow);
 	parse_gamelists->setState(Settings::getInstance()->getBool("ParseGamelistOnly"));
@@ -476,7 +485,7 @@ void GuiMenu::openQuitMenu()
 			window->pushGui(new GuiMsgBox(window, "REINICIAR?", "SI",
 				[] {
 				Scripting::fireEvent("quit");
-				if(quitES("/tmp/es-restart") != 0)
+				if(quitES(QuitMode::RESTART) != 0)
 					LOG(LogWarning) << "Restart terminated with non-zero result!";
 			}, "NO", nullptr));
 		});
@@ -492,7 +501,7 @@ void GuiMenu::openQuitMenu()
 				window->pushGui(new GuiMsgBox(window, "SALIR?", "SI",
 					[] {
 					Scripting::fireEvent("quit");
-					quitES("");
+					quitES();
 				}, "NO", nullptr));
 			});
 			row.addElement(std::make_shared<TextComponent>(window, "SALIR DE EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
@@ -505,7 +514,7 @@ void GuiMenu::openQuitMenu()
 			[] {
 			Scripting::fireEvent("quit", "reboot");
 			Scripting::fireEvent("reboot");
-			if (quitES("/tmp/es-sysrestart") != 0)
+			if (quitES(QuitMode::REBOOT) != 0)
 				LOG(LogWarning) << "Restart terminated with non-zero result!";
 		}, "NO", nullptr));
 	});
@@ -518,7 +527,7 @@ void GuiMenu::openQuitMenu()
 			[] {
 			Scripting::fireEvent("quit", "shutdown");
 			Scripting::fireEvent("shutdown");
-			if (quitES("/tmp/es-shutdown") != 0)
+			if (quitES(QuitMode::SHUTDOWN) != 0)
 				LOG(LogWarning) << "Shutdown terminated with non-zero result!";
 		}, "NO", nullptr));
 	});

@@ -31,7 +31,8 @@ private:
 
 	//Clear everything and load default values.
 	void setDefaults();
-
+	void processBackwardCompatibility();
+	
 	std::map<std::string, bool> mBoolMap;
 	std::map<std::string, int> mIntMap;
 	std::map<std::string, float> mFloatMap;

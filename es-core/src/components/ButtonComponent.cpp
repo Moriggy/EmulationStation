@@ -2,7 +2,6 @@
 
 #include "resources/Font.h"
 #include "utils/StringUtil.h"
-#include "Renderer.h"
 
 ButtonComponent::ButtonComponent(Window* window, const std::string& text, const std::string& helpText, const std::function<void()>& func) : GuiComponent(window),
 	mBox(window, ":/button.png"),
@@ -87,14 +86,12 @@ void ButtonComponent::updateImage()
 void ButtonComponent::render(const Transform4x4f& parentTrans)
 {
 	Transform4x4f trans = parentTrans * getTransform();
-	trans.round();
 
 	mBox.render(trans);
 
 	if(mTextCache)
 	{
 		Vector3f centerOffset((mSize.x() - mTextCache->metrics.size.x()) / 2, (mSize.y() - mTextCache->metrics.size.y()) / 2, 0);
-		centerOffset.round();
 		trans = trans.translate(centerOffset);
 
 		Renderer::setMatrix(trans);

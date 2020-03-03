@@ -7,7 +7,6 @@
 #include "Settings.h"
 #include <vlc/vlc.h>
 #include <SDL_mutex.h>
-#include "AudioManager.h"
 
 #ifdef WIN32
 #include <codecvt>
@@ -253,9 +252,6 @@ void VideoVlcComponent::startVideo()
 			mMedia = libvlc_media_new_path(mVLC, path.c_str());
 			if (mMedia)
 			{
-				//añadido
-				bool hasAudioTrack = false;
-
 				unsigned track_count;
 				// Get the media metadata so we can find the aspect ratio
 				libvlc_media_parse(mMedia);
@@ -263,16 +259,11 @@ void VideoVlcComponent::startVideo()
 				track_count = libvlc_media_tracks_get(mMedia, &tracks);
 				for (unsigned track = 0; track < track_count; ++track)
 				{
-					if (tracks[track]->i_type == libvlc_track_audio)
-						hasAudioTrack = true;
-						else if (tracks[track]->i_type == libvlc_track_video)
-						{
-							mVideoWidth = tracks[track]->video->i_width;
-							mVideoHeight = tracks[track]->video->i_height;
-
-							if (hasAudioTrack)
-								break;
-						}
+					if (tracks[track]->i_type == libvlc_track_video)
+					{
+						mVideoWidth = tracks[track]->video->i_width;
+						mVideoHeight = tracks[track]->video->i_height;
+						break;
 					}
 				}
 				libvlc_media_tracks_release(tracks, track_count);
@@ -304,12 +295,9 @@ void VideoVlcComponent::startVideo()
 					// Setup the media player
 					mMediaPlayer = libvlc_media_player_new_from_media(mMedia);
 
-					if (hasAudioTrack)
+					if (!Settings::getInstance()->getBool("VideoAudio"))
 					{
-						if (!Settings::getInstance()->getBool("VideoAudio"))
-							libvlc_audio_set_mute(mMediaPlayer, 1);
-						else
-							AudioManager::setVideoPlaying(true);
+						libvlc_audio_set_mute(mMediaPlayer, 1);
 					}
 
 					libvlc_media_player_play(mMediaPlayer);
@@ -338,13 +326,5 @@ void VideoVlcComponent::stopVideo()
 		mMediaPlayer = NULL;
 		freeContext();
 		PowerSaver::resume();
-		AudioManager::setVideoPlaying(false);
 	}
-}
-
-//añadido
-void VideoVlcComponent::update(int deltaTime)
-{
-	mElapsed += deltaTime;
-	VideoComponent::update(deltaTime);
 }

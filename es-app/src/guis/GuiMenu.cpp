@@ -124,17 +124,13 @@ void GuiMenu::openScraperSettings()
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 	std::function<void()> openAndSave = openScrapeNow;
 	openAndSave = [s, openAndSave] { s->save(); openAndSave(); };
-	s->addEntry("SCRAPEAR AHORA"), false, openAndSave);
+	row.makeAcceptInputHandler(openAndSave);
 
-	scraper_list->onSelectedChanged([this, s, scraper, scraper_list](std::string value)
-	{
-		if (value != scraper && (scraper == "ScreenScraper" || value == "ScreenScraper"))
-		{
-			Settings::getInstance()->setString("Scraper", value);
-			delete s;
-			openScraperSettings();
-		}
-	});
+	auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPEAR AHORA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+	auto bracket = makeArrow(mWindow);
+	row.addElement(scrape_now, true);
+	row.addElement(bracket, false);
+	s->addRow(row);
 
 	mWindow->pushGui(s);
 }

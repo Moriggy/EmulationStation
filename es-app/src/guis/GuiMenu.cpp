@@ -126,7 +126,7 @@ void GuiMenu::openScraperSettings()
 	openAndSave = [s, openAndSave] { s->save(); openAndSave(); };
 	s->addEntry("SCRAPEAR AHORA"), false, openAndSave);
 
-	scraper_list->setSelectedChangedCallback([this, s, scraper, scraper_list](std::string value)
+	scraper_list->onSelectedChanged([this, s, scraper, scraper_list](std::string value)
 	{
 		if (value != scraper && (scraper == "ScreenScraper" || value == "ScreenScraper"))
 		{

@@ -172,6 +172,11 @@ void GuiMenu::openSoundSettings()
 		s->addWithLabel("ACTIVAR SONIDO DE VIDEOS", video_audio);
 		s->addSaveFunc([video_audio] { Settings::getInstance()->setBool("VideoAudio", video_audio->getState()); });
 
+		auto videolowermusic = std::make_shared<SwitchComponent>(mWindow);
+		videolowermusic->setState(Settings::getInstance()->getBool("VideoLowersMusic"));
+		s->addWithLabel("BAJAR MUSICA CUANDO SE REPRODUZCA VIDEO", videolowermusic);
+		s->addSaveFunc([videolowermusic] { Settings::getInstance()->setBool("VideoLowersMusic", videolowermusic->getState()); });
+
 #ifdef _RPI_
 		// OMX player Audio Device
 		auto omx_audio_dev = std::make_shared< OptionListComponent<std::string> >(mWindow, "DISPOSITIVO DE AUDIO OMX PLAYER", false);

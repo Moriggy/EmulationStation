@@ -225,6 +225,9 @@ void Window::update(int deltaTime)
 	// Update the screensaver
 	if (mScreenSaver)
 		mScreenSaver->update(deltaTime);
+
+		//añadido
+		AudioManager::update(deltaTime);
 }
 
 void Window::render()

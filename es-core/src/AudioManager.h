@@ -31,6 +31,14 @@ public:
 	void stop();
 
 	virtual ~AudioManager();
+
+	//añadido
+
+	float mMusicVolume;
+	int mVideoPlaying;
+
+	static void setVideoPlaying(bool state);
+	static void update(int deltaTime);
 };
 
 #endif // ES_CORE_AUDIO_MANAGER_H

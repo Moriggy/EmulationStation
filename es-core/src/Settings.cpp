@@ -93,9 +93,14 @@ void Settings::setDefaults()
 	mStringMap["TransitionStyle"] = "instantaneo";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "oscurecer";
-	mStringMap["Scraper"] = "TheGamesDB";
 	mStringMap["GamelistViewStyle"] = "automatico";
 	mStringMap["SaveGamelistsMode"] = "al salir";
+
+	mStringMap["Scraper"] = "ScreenScraper";
+	mStringMap["ScrapperImageSrc"] = "box-2D";
+	mStringMap["ScrapperThumbSrc"] = "";
+	mBoolMap["ScrapeMarquee"] = false;
+	mBoolMap["ScrapeVideos"] = false;
 
 	mBoolMap["ScreenSaverControls"] = true;
 	mStringMap["ScreenSaverGameInfo"] = "nunca";

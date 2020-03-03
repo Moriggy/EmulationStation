@@ -54,13 +54,15 @@ void GuiMenu::openScraperSettings()
 {
 	auto s = new GuiSettings(mWindow, "SCRAPER");
 
+	std::string scraper = Settings::getInstance()->getString("Scraper");
+
 	// scrape from
 	auto scraper_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "SCRAPEAR DESDE", false);
 	std::vector<std::string> scrapers = getScraperList();
 
 	// Select either the first entry of the one read from the settings, just in case the scraper from settings has vanished.
 	for(auto it = scrapers.cbegin(); it != scrapers.cend(); it++)
-		scraper_list->add(*it, *it, *it == Settings::getInstance()->getString("Scraper"));
+		scraper_list->add(*it, *it, *it == scraper);
 
 	s->addWithLabel("SCRAPEAR DESDE", scraper_list);
 	s->addSaveFunc([scraper_list] { Settings::getInstance()->setString("Scraper", scraper_list->getSelected()); });
@@ -71,18 +73,68 @@ void GuiMenu::openScraperSettings()
 	s->addWithLabel("SCRAPEAR PUNTUACION", scrape_ratings);
 	s->addSaveFunc([scrape_ratings] { Settings::getInstance()->setBool("ScrapeRatings", scrape_ratings->getState()); });
 
+	if (scraper == "ScreenScraper")
+	{
+		// image source
+		std::string imageSourceName = Settings::getInstance()->getString("ScrapperImageSrc");
+		auto imageSource = std::make_shared< OptionListComponent<std::string> >(mWindow, "IMAGEN PREFERIDA", false);
+		imageSource->add("NINGUNA", "", imageSourceName.empty());
+		imageSource->add("CAPTURA DE PANTALLA", "ss", imageSourceName == "ss");
+		imageSource->add("CAJA 2D", "box-2D", imageSourceName == "box-2D");
+		imageSource->add("CAJA 3D", "box-3D", imageSourceName == "box-3D");
+		imageSource->add("MIX", "mixrbv1", imageSourceName == "mixrbv1");
+		imageSource->add("LOGO", "wheel", imageSourceName == "wheel");
+		s->addWithLabel("IMAGEN PREFERIDA", imageSource);
+
+		s->addSaveFunc([imageSource] {
+			if (Settings::getInstance()->getString("ScrapperImageSrc") != imageSource->getSelected())
+				Settings::getInstance()->setString("ScrapperImageSrc", imageSource->getSelected());
+		});
+
+		std::string thumbSourceName = Settings::getInstance()->getString("ScrapperThumbSrc");
+		auto thumbSource = std::make_shared< OptionListComponent<std::string> >(mWindow, "FOTO PREFERIDA", false);
+		thumbSource->add("NINGUNA", "", thumbSourceName.empty());
+		thumbSource->add("CAPTURA DE PANTALLA", "ss", thumbSourceName == "ss");
+		thumbSource->add("CAJA 2D", "box-2D", thumbSourceName == "box-2D");
+		thumbSource->add("CAJA 3D", "box-3D", thumbSourceName == "box-3D");
+		thumbSource->add("MIX", "mixrbv1", thumbSourceName == "mixrbv1");
+		thumbSource->add("LOGO", "wheel", thumbSourceName == "wheel");
+		s->addWithLabel("FOTO PREFERIDA", thumbSource);
+
+		s->addSaveFunc([thumbSource] {
+			if (Settings::getInstance()->getString("ScrapperThumbSrc") != thumbSource->getSelected())
+				Settings::getInstance()->setString("ScrapperThumbSrc", thumbSource->getSelected());
+		});
+
+		// scrape marquee
+		auto scrape_marquee = std::make_shared<SwitchComponent>(mWindow);
+		scrape_marquee->setState(Settings::getInstance()->getBool("ScrapeMarquee"));
+		s->addWithLabel("SCRAPEAR MARQUESINA", scrape_marquee);
+		s->addSaveFunc([scrape_marquee] { Settings::getInstance()->setBool("ScrapeMarquee", scrape_marquee->getState()); });
+
+		// scrape video
+		auto scrape_video = std::make_shared<SwitchComponent>(mWindow);
+		scrape_video->setState(Settings::getInstance()->getBool("ScrapeVideos"));
+		s->addWithLabel("SCRAPEAR VIDEOS", scrape_video);
+		s->addSaveFunc([scrape_video] { Settings::getInstance()->setBool("ScrapeVideos", scrape_video->getState()); });
+	}
+
 	// scrape now
 	ComponentListRow row;
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 	std::function<void()> openAndSave = openScrapeNow;
 	openAndSave = [s, openAndSave] { s->save(); openAndSave(); };
-	row.makeAcceptInputHandler(openAndSave);
+	s->addEntry("SCRAPEAR AHORA"), false, openAndSave);
 
-	auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPEAR AHORA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-	auto bracket = makeArrow(mWindow);
-	row.addElement(scrape_now, true);
-	row.addElement(bracket, false);
-	s->addRow(row);
+	scraper_list->setSelectedChangedCallback([this, s, scraper, scraper_list](std::string value)
+	{
+		if (value != scraper && (scraper == "ScreenScraper" || value == "ScreenScraper"))
+		{
+			Settings::getInstance()->setString("Scraper", value);
+			delete s;
+			openScraperSettings();
+		}
+	});
 
 	mWindow->pushGui(s);
 }

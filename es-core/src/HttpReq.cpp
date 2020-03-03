@@ -33,9 +33,51 @@ std::string HttpReq::urlEncode(const std::string &s)
 bool HttpReq::isUrl(const std::string& str)
 {
 	//the worst guess
-	return (!str.empty() && !Utils::FileSystem::exists(str) && 
+	return (!str.empty() && !Utils::FileSystem::exists(str) &&
 		(str.find("http://") != std::string::npos || str.find("https://") != std::string::npos || str.find("www.") != std::string::npos));
 }
+
+#ifdef WIN32
+LONG _regGetDWORD(HKEY hKey, const std::string &strPath, const std::string &strValueName)
+{
+	HKEY hSubKey;
+	LONG nRet = ::RegOpenKeyEx(hKey, strPath.c_str(), 0L, KEY_QUERY_VALUE, &hSubKey);
+	if (nRet == ERROR_SUCCESS)
+	{
+		DWORD dwBufferSize(sizeof(DWORD));
+		DWORD nResult(0);
+
+		nRet = ::RegQueryValueExA(hSubKey, strValueName.c_str(), 0, NULL, reinterpret_cast<LPBYTE>(&nResult), &dwBufferSize);
+		::RegCloseKey(hSubKey);
+
+		if (nRet == ERROR_SUCCESS)
+			return nResult;
+	}
+
+	return 0;
+}
+
+std::string _regGetString(HKEY hKey, const std::string &strPath, const std::string &strValueName)
+{
+	std::string ret;
+
+	HKEY hSubKey;
+	LONG nRet = ::RegOpenKeyEx(hKey, strPath.c_str(), 0L, KEY_QUERY_VALUE, &hSubKey);
+	if (nRet == ERROR_SUCCESS)
+	{
+		char szBuffer[1024];
+		DWORD dwBufferSize = sizeof(szBuffer);
+
+		nRet = ::RegQueryValueExA(hSubKey, strValueName.c_str(), 0, NULL, (LPBYTE)szBuffer, &dwBufferSize);
+		::RegCloseKey(hSubKey);
+
+		if (nRet == ERROR_SUCCESS)
+			ret = szBuffer;
+	}
+
+	return ret;
+}
+#endif
 
 HttpReq::HttpReq(const std::string& url)
 	: mStatus(REQ_IN_PROGRESS), mHandle(NULL)
@@ -77,7 +119,7 @@ HttpReq::HttpReq(const std::string& url)
 	}
 
 	//set curl restrict redirect protocols
-	err = curl_easy_setopt(mHandle, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS); 
+	err = curl_easy_setopt(mHandle, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
 	if(err != CURLE_OK)
 	{
 		mStatus = REQ_IO_ERROR;
@@ -102,6 +144,35 @@ HttpReq::HttpReq(const std::string& url)
 		onError(curl_easy_strerror(err));
 		return;
 	}
+
+  #ifdef WIN32
+  	// Setup system proxy on Windows if required
+  	if (_regGetDWORD(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", "ProxyEnable"))
+  	{
+  		auto proxyServer = _regGetString(HKEY_CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", "ProxyServer");
+  		if (!proxyServer.empty())
+  		{
+  			std::string protocol = (url.find("https:/") == 0 ? "https=" : "http=");
+
+  			size_t pxs = proxyServer.find(protocol);
+  			if (pxs != std::string::npos)
+  			{
+  				size_t pxe = proxyServer.find(";", pxs);
+  				if (pxe == std::string::npos)
+  					pxe = proxyServer.size() - 1;
+
+  				proxyServer = proxyServer.substr(pxs + protocol.size(), pxe - pxs - protocol.size());
+  			}
+
+  			if (!proxyServer.empty())
+  			{
+  				CURLcode ret;
+  				curl_easy_setopt(mHandle, CURLOPT_PROXY, proxyServer.c_str());
+  				curl_easy_setopt(mHandle, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+  			}
+  		}
+  	}
+  #endif
 
 	//add the handle to our multi
 	CURLMcode merr = curl_multi_add_handle(s_multi_handle, mHandle);
@@ -150,7 +221,7 @@ HttpReq::Status HttpReq::status()
 			if(msg->msg == CURLMSG_DONE)
 			{
 				HttpReq* req = s_requests[msg->easy_handle];
-				
+
 				if(req == NULL)
 				{
 					LOG(LogError) << "Cannot find easy handle!";
@@ -201,5 +272,5 @@ size_t HttpReq::write_content(void* buff, size_t size, size_t nmemb, void* req_p
 //used as a curl callback
 /*int HttpReq::update_progress(void* req_ptr, double dlTotal, double dlNow, double ulTotal, double ulNow)
 {
-	
+
 }*/

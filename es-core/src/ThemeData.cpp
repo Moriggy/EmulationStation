@@ -2,8 +2,8 @@
 
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
-#include "utils/FileSystemUtil.h"
 #include "utils/StringUtil.h"
+#include "utils/FileSystemUtil.h"
 #include "Log.h"
 #include "platform.h"
 #include "Settings.h"
@@ -19,7 +19,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "size", NORMALIZED_PAIR },
 		{ "maxSize", NORMALIZED_PAIR },
 		{ "origin", NORMALIZED_PAIR },
-		{ "rotation", FLOAT },
+	 	{ "rotation", FLOAT },
 		{ "rotationOrigin", NORMALIZED_PAIR },
 		{ "path", PATH },
 		{ "default", PATH },
@@ -96,13 +96,13 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
 	 	{ "origin", NORMALIZED_PAIR },
-	 	{ "visible", BOOLEAN },
+		{ "visible", BOOLEAN },
 	 	{ "zIndex", FLOAT } } },
 	{ "ninepatch", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
 		{ "path", PATH },
-	 	{ "visible", BOOLEAN },
+		{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "datetime", {
 		{ "pos", NORMALIZED_PAIR },
@@ -120,7 +120,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "value", STRING },
 		{ "format", STRING },
 		{ "displayRelative", BOOLEAN },
-	 	{ "visible", BOOLEAN },
+		{ "visible", BOOLEAN },
 	 	{ "zIndex", FLOAT } } },
 	{ "rating", {
 		{ "pos", NORMALIZED_PAIR },
@@ -151,7 +151,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "rotationOrigin", NORMALIZED_PAIR },
 		{ "default", PATH },
 		{ "delay", FLOAT },
-	 	{ "visible", BOOLEAN },
+		{ "visible", BOOLEAN },
 	 	{ "zIndex", FLOAT },
 		{ "showSnapshotNoVideo", BOOLEAN },
 		{ "showSnapshotDelay", BOOLEAN } } },
@@ -419,7 +419,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 		switch(typeIt->second)
 		{
-		case NORMALIZED_RECT:
+			case NORMALIZED_RECT:
 		{
 			Vector4f val;
 

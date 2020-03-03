@@ -200,14 +200,14 @@ std::string DateTimeEditComponent::getDisplayString(DisplayMode mode) const
 		break;
 	case DISP_DATE_TIME:
 		if(mTime.getTime() == 0)
-			return "unknown";
+			return "desconocido";
 		fmt = "%m/%d/%Y %H:%M:%S";
 		break;
 	case DISP_RELATIVE_TO_NOW:
 		{
 			//relative time
 			if(mTime.getTime() == 0)
-				return "never";
+				return "nunca";
 
 			Utils::Time::DateTime now(Utils::Time::now());
 			Utils::Time::Duration dur(now.getTime() - mTime.getTime());
@@ -215,13 +215,13 @@ std::string DateTimeEditComponent::getDisplayString(DisplayMode mode) const
 			char buf[64];
 
 			if(dur.getDays() > 0)
-				sprintf(buf, "%d day%s ago", dur.getDays(), (dur.getDays() > 1) ? "s" : "");
+				sprintf(buf, "Hace %d day%s", dur.getDays(), (dur.getDays() > 1) ? "s" : "");
 			else if(dur.getHours() > 0)
-				sprintf(buf, "%d hour%s ago", dur.getHours(), (dur.getHours() > 1) ? "s" : "");
+				sprintf(buf, "Hace %d hora%s", dur.getHours(), (dur.getHours() > 1) ? "s" : "");
 			else if(dur.getMinutes() > 0)
-				sprintf(buf, "%d minute%s ago", dur.getMinutes(), (dur.getMinutes() > 1) ? "s" : "");
+				sprintf(buf, "Hace %d minuto%s", dur.getMinutes(), (dur.getMinutes() > 1) ? "s" : "");
 			else
-				sprintf(buf, "%d second%s ago", dur.getSeconds(), (dur.getSeconds() > 1) ? "s" : "");
+				sprintf(buf, "Hace %d segundo%s", dur.getSeconds(), (dur.getSeconds() > 1) ? "s" : "");
 
 			return std::string(buf);
 		}

@@ -130,9 +130,9 @@ Transform4x4f& Transform4x4f::invert(const Transform4x4f& _other)
 	tm[15] =  1;
 
 	float Determinant = om[ 0] * tm[ 0] +
-	                    om[ 4] * tm[ 1] +
-	                    om[ 8] * tm[ 2] +
-	                    om[12] * tm[ 3];
+                			om[ 4] * tm[ 1] +
+                			om[ 8] * tm[ 2] +
+                			om[12] * tm[ 3];
 
 	if(Determinant != 0)
 		Determinant = 1 / Determinant;
@@ -190,23 +190,23 @@ Transform4x4f& Transform4x4f::rotate(const float _angle, const Vector3f& _axis)
 	const float  sy      = s * y;
 	const float  sz      = s * z;
 	const float  r[9]    = { tx * x + c,
-	                         tx * y - sz,
-	                         tx * z + sy,
-	                         ty * x + sz,
-	                         ty * y + c,
-	                         ty * z - sx,
-	                         tz * x - sy,
-	                         tz * y + sx,
-	                         tz * z + c };
-	const float  temp[9] = { tm[ 0] * r[0] + tm[ 4] * r[1] + tm[ 8] * r[2],
-	                         tm[ 1] * r[0] + tm[ 5] * r[1] + tm[ 9] * r[2],
-	                         tm[ 2] * r[0] + tm[ 6] * r[1] + tm[10] * r[2],
-	                         tm[ 0] * r[3] + tm[ 4] * r[4] + tm[ 8] * r[5],
-	                         tm[ 1] * r[3] + tm[ 5] * r[4] + tm[ 9] * r[5],
-	                         tm[ 2] * r[3] + tm[ 6] * r[4] + tm[ 0] * r[5],
-	                         tm[ 0] * r[6] + tm[ 4] * r[7] + tm[ 8] * r[8],
-	                         tm[ 1] * r[6] + tm[ 5] * r[7] + tm[ 9] * r[8],
-	                         tm[ 2] * r[6] + tm[ 6] * r[7] + tm[10] * r[8] };
+		tx * y - sz,
+		tx * z + sy,
+		ty * x + sz,
+		ty * y + c,
+		ty * z - sx,
+		tz * x - sy,
+		tz * y + sx,
+		tz * z + c };
+const float  temp[9] = { tm[ 0] * r[0] + tm[ 4] * r[1] + tm[ 8] * r[2],
+		tm[ 1] * r[0] + tm[ 5] * r[1] + tm[ 9] * r[2],
+		tm[ 2] * r[0] + tm[ 6] * r[1] + tm[10] * r[2],
+		tm[ 0] * r[3] + tm[ 4] * r[4] + tm[ 8] * r[5],
+		tm[ 1] * r[3] + tm[ 5] * r[4] + tm[ 9] * r[5],
+		tm[ 2] * r[3] + tm[ 6] * r[4] + tm[ 0] * r[5],
+		tm[ 0] * r[6] + tm[ 4] * r[7] + tm[ 8] * r[8],
+		tm[ 1] * r[6] + tm[ 5] * r[7] + tm[ 9] * r[8],
+		tm[ 2] * r[6] + tm[ 6] * r[7] + tm[10] * r[8] };
 
 	tm[ 0] = temp[0];
 	tm[ 1] = temp[1];

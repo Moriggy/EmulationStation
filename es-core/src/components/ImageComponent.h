@@ -95,7 +95,7 @@ private:
 	unsigned int mColorShift;
 	unsigned int mColorShiftEnd;
 	bool mColorGradientHorizontal;
-
+	
 	std::string mDefaultPath;
 
 	std::shared_ptr<TextureResource> mTexture;

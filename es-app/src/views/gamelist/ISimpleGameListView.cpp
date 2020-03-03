@@ -106,7 +106,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				populateList(mCursorStack.top()->getParent()->getChildren());
 				setCursor(mCursorStack.top());
 				mCursorStack.pop();
-				Sound::getFromTheme(getTheme(), getName(), "back")->play();
+				Sound::getFromTheme(getTheme(), getName(), "atras")->play();
 			}else{
 				onFocusLost();
 				SystemData* systemToView = getCursor()->getSystem();
@@ -160,13 +160,3 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 
 	return IGameListView::input(config, input);
 }
-
-
-
-
-
-
-
-
-
-

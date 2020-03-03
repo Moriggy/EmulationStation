@@ -47,11 +47,11 @@ public:
 
 		// Which Region to use when selecting the artwork
 		// Applies to: artwork, name of the game, date of release
-		std::string region = "US";
+		std::string region = "ES";
 
 		// Which Language to use when selecting the textual information
 		// Applies to: description, genre
-		std::string language = "EN";
+		std::string language = "ES";
 
 		ScreenScraperConfig() {};
 	} configuration;

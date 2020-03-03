@@ -56,7 +56,7 @@ const std::map<PlatformId, unsigned short> screenscraper_platformid_map{
 	{ NINTENDO_VIRTUAL_BOY, 11 },
 	{ NINTENDO_GAME_AND_WATCH, 52 },
 	{ PC, 135 },
-	{ OPENBOR, 214 },
+	{ OPENBOR, 214},
 	{ SCUMMVM, 123},
 	{ SEGA_32X, 19 },
 	{ SEGA_CD, 20 },
@@ -148,15 +148,15 @@ void screenscraper_generate_scraper_requests(const ScraperSearchParams& params,
 		}
 	}
 
-	// Sort the platform IDs and remove duplicates
-	std::sort(p_ids.begin(), p_ids.end());
-	auto last = std::unique(p_ids.begin(), p_ids.end());
-	p_ids.erase(last, p_ids.end());
+// Sort the platform IDs and remove duplicates
+std::sort(p_ids.begin(), p_ids.end());
+auto last = std::unique(p_ids.begin(), p_ids.end());
+p_ids.erase(last, p_ids.end());
 
-	for (auto platform = p_ids.cbegin(); platform != p_ids.cend(); platform++)
-	{
-		path += "&systemeid=";
-		path += HttpReq::urlEncode(std::to_string(*platform));
+for (auto platform = p_ids.cbegin(); platform != p_ids.cend(); platform++)
+{
+path += "&systemeid=";
+path += HttpReq::urlEncode(std::to_string(*platform));
 		requests.push(std::unique_ptr<ScraperRequest>(new ScreenScraperRequest(requests, results, path)));
 	}
 
@@ -200,22 +200,22 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 		std::string language = Utils::String::toLower(ssConfig.language).c_str();
 
 		// Name fallback: US, WOR(LD). ( Xpath: Data/jeu[0]/noms/nom[*] ).
-		result.mdl.set("name", find_child_by_attribute_list(game.child("noms"), "nom", "region", { region, "wor", "us" , "ss", "eu", "jp" }).text().get());
+		result.mdl.set("name", find_child_by_attribute_list(game.child("noms"), "nom", "region", { region, "es", "eu", "wor", "us" , "ss", "jp" }).text().get());
 
 		// Description fallback language: EN, WOR(LD)
-		std::string description = find_child_by_attribute_list(game.child("synopsis"), "synopsis", "langue", { language, "en", "wor" }).text().get();
+		std::string description = find_child_by_attribute_list(game.child("synopsis"), "synopsis", "langue", { language, "es", "es" }).text().get();
 
 		if (!description.empty()) {
 			result.mdl.set("desc", Utils::String::replace(description, "&nbsp;", " "));
 		}
 
 		// Genre fallback language: EN. ( Xpath: Data/jeu[0]/genres/genre[*] )
-		result.mdl.set("genre", find_child_by_attribute_list(game.child("genres"), "genre", "langue", { language, "en" }).text().get());
+		result.mdl.set("genre", find_child_by_attribute_list(game.child("genres"), "genre", "langue", { language, "es" }).text().get());
 		LOG(LogDebug) << "Genre: " << result.mdl.get("genre");
 
 		// Get the date proper. The API returns multiple 'date' children nodes to the 'dates' main child of 'jeu'.
 		// Date fallback: WOR(LD), US, SS, JP, EU
-		std::string _date = find_child_by_attribute_list(game.child("dates"), "date", "region", { region, "wor", "us", "ss", "jp", "eu" }).text().get();
+		std::string _date = find_child_by_attribute_list(game.child("dates"), "date", "region", { region, "es", "eu", "wor", "us" , "ss", "jp" }).text().get();
 		LOG(LogDebug) << "Release Date (unparsed): " << _date;
 
 		// Date can be YYYY-MM-DD or just YYYY.
@@ -267,7 +267,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 			if (results.size())
 			{
 				// Region fallback: WOR(LD), US, CUS(TOM?), JP, EU
-				for (auto _region : std::vector<std::string>{ region, "wor", "us", "cus", "jp", "eu" })
+				for (auto _region : std::vector<std::string>{ region, "es", "eu", "wor", "us", "cus", "jp" })
 				{
 					if (art)
 						break;

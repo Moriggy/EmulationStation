@@ -50,11 +50,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, Sys
 
 SystemData::~SystemData()
 {
-	//save changed game data back to xml
-	if(!Settings::getInstance()->getBool("IgnoreGamelist") && Settings::getInstance()->getBool("SaveGamelistsOnExit") && !mIsCollectionSystem)
-	{
-		updateGamelist(this);
-	}
+	if(Settings::getInstance()->getString("SaveGamelistsMode") == "on exit")
+		writeMetaData();
 
 	delete mRootFolder;
 	delete mFilterIndex;
@@ -65,7 +62,7 @@ void SystemData::setIsGameSystemStatus()
 	// we exclude non-game systems from specific operations (i.e. the "RetroPie" system, at least)
 	// if/when there are more in the future, maybe this can be a more complex method, with a proper list
 	// but for now a simple string comparison is more performant
-	mIsGameSystem = (mName != "retropie");
+	mIsGameSystem = (mName != "emulos");
 }
 
 void SystemData::populateFolder(FileData* folder)
@@ -501,4 +498,19 @@ void SystemData::loadTheme()
 		LOG(LogError) << e.what();
 		mTheme = std::make_shared<ThemeData>(); // reset to empty
 	}
+}
+
+void SystemData::writeMetaData() {
+	if(Settings::getInstance()->getBool("IgnoreGamelist") || mIsCollectionSystem)
+		return;
+
+	//save changed game data back to xml
+	updateGamelist(this);
+}
+
+void SystemData::onMetaDataSavePoint() {
+	if(Settings::getInstance()->getString("SaveGamelistsMode") != "always")
+		return;
+
+	writeMetaData();
 }

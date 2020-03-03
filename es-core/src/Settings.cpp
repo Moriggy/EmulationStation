@@ -75,7 +75,6 @@ void Settings::setDefaults()
 	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
 	mBoolMap["MoveCarousel"] = true;
-	mBoolMap["SaveGamelistsOnExit"] = true;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
@@ -91,16 +90,17 @@ void Settings::setDefaults()
 		mIntMap["MaxVRAM"] = 100;
 	#endif
 
-	mStringMap["TransitionStyle"] = "fade";
+	mStringMap["TransitionStyle"] = "instantaneo";
 	mStringMap["ThemeSet"] = "";
-	mStringMap["ScreenSaverBehavior"] = "dim";
+	mStringMap["ScreenSaverBehavior"] = "oscurecer";
 	mStringMap["Scraper"] = "TheGamesDB";
-	mStringMap["GamelistViewStyle"] = "automatic";
+	mStringMap["GamelistViewStyle"] = "automatico";
+	mStringMap["SaveGamelistsMode"] = "al salir";
 
 	mBoolMap["ScreenSaverControls"] = true;
-	mStringMap["ScreenSaverGameInfo"] = "never";
+	mStringMap["ScreenSaverGameInfo"] = "nunca";
 	mBoolMap["StretchVideoOnScreenSaver"] = false;
-	mStringMap["PowerSaverMode"] = "disabled";
+	mStringMap["PowerSaverMode"] = "deshabilitado";
 
 	mIntMap["ScreenSaverSwapImageTimeout"] = 10000;
 	mBoolMap["SlideshowScreenSaverStretch"] = false;
@@ -120,7 +120,7 @@ void Settings::setDefaults()
 		mStringMap["SubtitleFont"] = "/usr/share/fonts/truetype/freefont/FreeSans.ttf";
 		mStringMap["SubtitleItalicFont"] = "/usr/share/fonts/truetype/freefont/FreeSansOblique.ttf";
 		mIntMap["SubtitleSize"] = 55;
-		mStringMap["SubtitleAlignment"] = "left";
+		mStringMap["SubtitleAlignment"] = "izquierda";
 	#else
 		mBoolMap["ScreenSaverOmxPlayer"] = false;
 	#endif
@@ -225,6 +225,19 @@ void Settings::loadFile()
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
 	for(pugi::xml_node node = doc.child("string"); node; node = node.next_sibling("string"))
 		setString(node.attribute("name").as_string(), node.attribute("value").as_string());
+
+			processBackwardCompatibility();
+		}
+
+		void Settings::processBackwardCompatibility()
+		{
+			{	// SaveGamelistsOnExit -> SaveGamelistsMode
+				std::map<std::string, bool>::const_iterator it = mBoolMap.find("SaveGamelistsOnExit");
+				if (it != mBoolMap.end()) {
+					mStringMap["SaveGamelistsMode"] = it->second ? "on exit" : "never";
+					mBoolMap.erase(it);
+				}
+			}
 }
 
 //Print a warning message if the setting we're trying to get doesn't already exist in the map, then return the value in the map.

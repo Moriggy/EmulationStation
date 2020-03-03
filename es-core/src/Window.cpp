@@ -118,7 +118,7 @@ void Window::input(InputConfig* config, Input input)
 {
 	if (mScreenSaver) {
 		if(mScreenSaver->isScreenSaverActive() && Settings::getInstance()->getBool("ScreenSaverControls") &&
-		   (Settings::getInstance()->getString("ScreenSaverBehavior") == "random video"))
+		   (Settings::getInstance()->getString("ScreenSaverBehavior") == "video al azar"))
 		{
 			if(mScreenSaver->getCurrentGame() != NULL && (config->isMappedLike("right", input) || config->isMappedTo("start", input) || config->isMappedTo("select", input)))
 			{

@@ -39,11 +39,11 @@ public:
 
 	void forceSize(Vector2f size, float selectedZoom);
 
-	Vector3f getBackgroundPosition();
+		Vector3f getBackgroundPosition();
 
-	virtual void update(int deltaTime);
+		virtual void update(int deltaTime);
 
-	std::shared_ptr<TextureResource> getTexture();
+		std::shared_ptr<TextureResource> getTexture();
 
 private:
 	void resize();

@@ -437,10 +437,10 @@ void GuiComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std
 	else
 		setZIndex(getDefaultZIndex());
 
-	if(properties & ThemeFlags::VISIBLE && elem->has("visible"))
-		setVisible(elem->get<bool>("visible"));
-	else
-		setVisible(true);
+			if(properties & ThemeFlags::VISIBLE && elem->has("visible"))
+				setVisible(elem->get<bool>("visible"));
+			else
+				setVisible(true);
 }
 
 void GuiComponent::updateHelpPrompts()

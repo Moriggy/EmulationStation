@@ -58,9 +58,9 @@ public:
 
 	enum GameListViewType
 	{
-		AUTOMATIC,
-		BASIC,
-		DETAILED,
+		AUTOMATICO,
+		BASICO,
+		DETALLADO,
 		GRID,
 		VIDEO
 	};

@@ -99,7 +99,7 @@ private:
 	float mCamera;
 	float mCameraDirection;
 
-	// MISCELLANEOUS
+// MISCELLANEOUS
 	bool mAnimate;
 	bool mCenterSelection;
 	bool mScrollLoop;
@@ -262,43 +262,43 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 		if (elem->has("margin"))
 			mMargin = elem->get<Vector2f>("margin") * screen;
 
-		if (elem->has("padding"))
-			mPadding = elem->get<Vector4f>("padding") * Vector4f(screen.x(), screen.y(), screen.x(), screen.y());
+			if (elem->has("padding"))
+				mPadding = elem->get<Vector4f>("padding") * Vector4f(screen.x(), screen.y(), screen.x(), screen.y());
 
-		if (elem->has("autoLayout"))
-			mAutoLayout = elem->get<Vector2f>("autoLayout");
+			if (elem->has("autoLayout"))
+				mAutoLayout = elem->get<Vector2f>("autoLayout");
 
-		if (elem->has("autoLayoutSelectedZoom"))
-			mAutoLayoutZoom = elem->get<float>("autoLayoutSelectedZoom");
+			if (elem->has("autoLayoutSelectedZoom"))
+				mAutoLayoutZoom = elem->get<float>("autoLayoutSelectedZoom");
 
-		if (elem->has("imageSource"))
-		{
-			auto direction = elem->get<std::string>("imageSource");
-			if (direction == "image")
-				mImageSource = IMAGE;
-			else if (direction == "marquee")
-				mImageSource = MARQUEE;
+			if (elem->has("imageSource"))
+			{
+				auto direction = elem->get<std::string>("imageSource");
+				if (direction == "image")
+					mImageSource = IMAGE;
+				else if (direction == "marquee")
+					mImageSource = MARQUEE;
+				else
+					mImageSource = THUMBNAIL;
+			}
 			else
 				mImageSource = THUMBNAIL;
-		}
-		else
-			mImageSource = THUMBNAIL;
 
 		if (elem->has("scrollDirection"))
 			mScrollDirection = (ScrollDirection)(elem->get<std::string>("scrollDirection") == "horizontal");
 
-		if (elem->has("centerSelection"))
-		{
-			mCenterSelection = (elem->get<bool>("centerSelection"));
+			if (elem->has("centerSelection"))
+			{
+				mCenterSelection = (elem->get<bool>("centerSelection"));
 
-			if (elem->has("scrollLoop"))
-				mScrollLoop = (elem->get<bool>("scrollLoop"));
-		}
+				if (elem->has("scrollLoop"))
+					mScrollLoop = (elem->get<bool>("scrollLoop"));
+			}
 
-		if (elem->has("animate"))
-			mAnimate = (elem->get<bool>("animate"));
-		else
-			mAnimate = true;
+			if (elem->has("animate"))
+				mAnimate = (elem->get<bool>("animate"));
+			else
+				mAnimate = true;
 
 		if (elem->has("gameImage"))
 		{
@@ -374,137 +374,137 @@ void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 		if (state == CURSOR_STOPPED && mCursorChangedCallback)
 			mCursorChangedCallback(state);
 
-		return;
-	}
-
-	bool direction = mCursor >= mLastCursor;
-	int diff = direction ? mCursor - mLastCursor : mLastCursor - mCursor;
-	if (isScrollLoop() && diff == mEntries.size() - 1)
-	{
-		direction = !direction;
-	}
-
-	int oldStart = mStartPosition;
-
-	int dimScrollable = (isVertical() ? mGridDimension.y() : mGridDimension.x()) - 2 * EXTRAITEMS;
-	int dimOpposite = isVertical() ? mGridDimension.x() : mGridDimension.y();
-
-	int centralCol = (int)(dimScrollable - 0.5) / 2;
-	int maxCentralCol = dimScrollable / 2;
-
-	int oldCol = (mLastCursor / dimOpposite);
-	int col = (mCursor / dimOpposite);
-
-	int lastCol = ((mEntries.size() - 1) / dimOpposite);
-
-	int lastScroll = std::max(0, (lastCol + 1 - dimScrollable));
-
-	float startPos = 0;
-	float endPos = 1;
-
-	if (((GuiComponent*)this)->isAnimationPlaying(2))
-	{
-		startPos = 0;
-		((GuiComponent*)this)->cancelAnimation(2);
-		updateTiles(direction, false, false);
-	}
-
-	if (mAnimate) {
-
-		std::shared_ptr<GridTileComponent> oldTile = nullptr;
-		std::shared_ptr<GridTileComponent> newTile = nullptr;
-
-		int oldIdx = mLastCursor - mStartPosition + (dimOpposite * EXTRAITEMS);
-		if (oldIdx >= 0 && oldIdx < mTiles.size())
-			oldTile = mTiles[oldIdx];
-
-		int newIdx = mCursor - mStartPosition + (dimOpposite * EXTRAITEMS);
-		if (isScrollLoop()) {
-			if (newIdx < 0)
-				newIdx += mEntries.size();
-			else if (newIdx >= mTiles.size())
-				newIdx -= mEntries.size();
-		}
-
-		if (newIdx >= 0 && newIdx < mTiles.size())
-			newTile = mTiles[newIdx];
-
-		for (auto it = mTiles.begin(); it != mTiles.end(); it++) {
-			if ((*it)->isSelected() && *it != oldTile && *it != newTile) {
-				startPos = 0;
-				(*it)->setSelected(false, false, nullptr);
-			}
-		}
-
-		Vector3f oldPos = Vector3f::Zero();
-
-		if (oldTile != nullptr && oldTile != newTile) {
-			oldPos = oldTile->getBackgroundPosition();
-			oldTile->setSelected(false, true, nullptr, true);
-		}
-
-		if (newTile != nullptr)
-			newTile->setSelected(true, true, oldPos == Vector3f::Zero() ? nullptr : &oldPos, true);
-	}
-
-	int firstVisibleCol = mStartPosition / dimOpposite;
-
-	if ((col < centralCol || (col == 0 && col == centralCol)) && !mCenterSelection)
-		mStartPosition = 0;
-	else if ((col - centralCol) > lastScroll && !mCenterSelection && !isScrollLoop())
-		mStartPosition = lastScroll * dimOpposite;
-	else if ((maxCentralCol != centralCol && col == firstVisibleCol + maxCentralCol) || col == firstVisibleCol + centralCol)
-	{
-		if (col == firstVisibleCol + maxCentralCol)
-			mStartPosition = (col - maxCentralCol) * dimOpposite;
-		else
-			mStartPosition = (col - centralCol) * dimOpposite;
-	}
-	else
-	{
-		if (oldCol == firstVisibleCol + maxCentralCol)
-			mStartPosition = (col - maxCentralCol) * dimOpposite;
-		else
-			mStartPosition = (col - centralCol) * dimOpposite;
-	}
-
-	auto lastCursor = mLastCursor;
-	mLastCursor = mCursor;
-
-	mCameraDirection = direction ? -1.0f : 1.0f;
-	mCamera = 0;
-
-	if (lastCursor < 0 || !mAnimate)
-	{
-		updateTiles(direction, mAnimate && (lastCursor >= 0 || isScrollLoop()));
-
-		if (mCursorChangedCallback)
-			mCursorChangedCallback(state);
-
-		return;
-	}
-
-	if (mCursorChangedCallback)
-		mCursorChangedCallback(state);
-
-	bool moveCamera = (oldStart != mStartPosition);
-
-	auto func = [this, startPos, endPos, moveCamera](float t)
-	{
-		if (!moveCamera)
 			return;
+			}
 
-		t -= 1; // cubic ease out
-		float pct = Math::lerp(0, 1, t*t*t + 1);
-		t = startPos * (1.0f - pct) + endPos * pct;
+			bool direction = mCursor >= mLastCursor;
+			int diff = direction ? mCursor - mLastCursor : mLastCursor - mCursor;
+			if (isScrollLoop() && diff == mEntries.size() - 1)
+			{
+				direction = !direction;
+			}
 
-		mCamera = t;
-	};
+			int oldStart = mStartPosition;
 
-	((GuiComponent*)this)->setAnimation(new LambdaAnimation(func, 250), 0, [this, direction] {
-		mCamera = 0;
-		updateTiles(direction, false);
-	}, false, 2);
+			int dimScrollable = (isVertical() ? mGridDimension.y() : mGridDimension.x()) - 2 * EXTRAITEMS;
+			int dimOpposite = isVertical() ? mGridDimension.x() : mGridDimension.y();
+
+			int centralCol = (int)(dimScrollable - 0.5) / 2;
+			int maxCentralCol = dimScrollable / 2;
+
+			int oldCol = (mLastCursor / dimOpposite);
+			int col = (mCursor / dimOpposite);
+
+			int lastCol = ((mEntries.size() - 1) / dimOpposite);
+
+			int lastScroll = std::max(0, (lastCol + 1 - dimScrollable));
+
+			float startPos = 0;
+			float endPos = 1;
+
+			if (((GuiComponent*)this)->isAnimationPlaying(2))
+			{
+				startPos = 0;
+				((GuiComponent*)this)->cancelAnimation(2);
+				updateTiles(direction, false, false);
+			}
+
+			if (mAnimate) {
+
+				std::shared_ptr<GridTileComponent> oldTile = nullptr;
+				std::shared_ptr<GridTileComponent> newTile = nullptr;
+
+				int oldIdx = mLastCursor - mStartPosition + (dimOpposite * EXTRAITEMS);
+				if (oldIdx >= 0 && oldIdx < mTiles.size())
+					oldTile = mTiles[oldIdx];
+
+				int newIdx = mCursor - mStartPosition + (dimOpposite * EXTRAITEMS);
+				if (isScrollLoop()) {
+					if (newIdx < 0)
+						newIdx += mEntries.size();
+					else if (newIdx >= mTiles.size())
+						newIdx -= mEntries.size();
+				}
+
+				if (newIdx >= 0 && newIdx < mTiles.size())
+					newTile = mTiles[newIdx];
+
+				for (auto it = mTiles.begin(); it != mTiles.end(); it++) {
+					if ((*it)->isSelected() && *it != oldTile && *it != newTile) {
+						startPos = 0;
+						(*it)->setSelected(false, false, nullptr);
+					}
+				}
+
+				Vector3f oldPos = Vector3f::Zero();
+
+				if (oldTile != nullptr && oldTile != newTile) {
+					oldPos = oldTile->getBackgroundPosition();
+					oldTile->setSelected(false, true, nullptr, true);
+				}
+
+				if (newTile != nullptr)
+					newTile->setSelected(true, true, oldPos == Vector3f::Zero() ? nullptr : &oldPos, true);
+			}
+
+			int firstVisibleCol = mStartPosition / dimOpposite;
+
+			if ((col < centralCol || (col == 0 && col == centralCol)) && !mCenterSelection)
+				mStartPosition = 0;
+			else if ((col - centralCol) > lastScroll && !mCenterSelection && !isScrollLoop())
+				mStartPosition = lastScroll * dimOpposite;
+			else if ((maxCentralCol != centralCol && col == firstVisibleCol + maxCentralCol) || col == firstVisibleCol + centralCol)
+			{
+				if (col == firstVisibleCol + maxCentralCol)
+					mStartPosition = (col - maxCentralCol) * dimOpposite;
+				else
+					mStartPosition = (col - centralCol) * dimOpposite;
+			}
+			else
+			{
+				if (oldCol == firstVisibleCol + maxCentralCol)
+					mStartPosition = (col - maxCentralCol) * dimOpposite;
+				else
+					mStartPosition = (col - centralCol) * dimOpposite;
+			}
+
+			auto lastCursor = mLastCursor;
+			mLastCursor = mCursor;
+
+			mCameraDirection = direction ? -1.0f : 1.0f;
+			mCamera = 0;
+
+			if (lastCursor < 0 || !mAnimate)
+			{
+				updateTiles(direction, mAnimate && (lastCursor >= 0 || isScrollLoop()));
+
+				if (mCursorChangedCallback)
+					mCursorChangedCallback(state);
+
+				return;
+			}
+
+			if (mCursorChangedCallback)
+				mCursorChangedCallback(state);
+
+		bool moveCamera = (oldStart != mStartPosition);
+
+		auto func = [this, startPos, endPos, moveCamera](float t)
+		{
+			if (!moveCamera)
+				return;
+
+			t -= 1; // cubic ease out
+			float pct = Math::lerp(0, 1, t*t*t + 1);
+			t = startPos * (1.0f - pct) + endPos * pct;
+
+			mCamera = t;
+		};
+
+		((GuiComponent*)this)->setAnimation(new LambdaAnimation(func, 250), 0, [this, direction] {
+			mCamera = 0;
+			updateTiles(direction, false);
+		}, false, 2);
 }
 
 
@@ -591,12 +591,12 @@ void ImageGridComponent<T>::updateTiles(bool ascending, bool allowAnimation, boo
 	}
 
 	// Temporary store previous texture so they can't be unloaded
-	std::vector<std::shared_ptr<TextureResource>> previousTextures;
-	for (int ti = 0; ti < (int)mTiles.size(); ti++)
-	{
-		std::shared_ptr<GridTileComponent> tile = mTiles.at(ti);
-		previousTextures.push_back(tile->getTexture());
-	}
+		std::vector<std::shared_ptr<TextureResource>> previousTextures;
+		for (int ti = 0; ti < (int)mTiles.size(); ti++)
+		{
+			std::shared_ptr<GridTileComponent> tile = mTiles.at(ti);
+			previousTextures.push_back(tile->getTexture());
+		}
 
 	// If going down, update from top to bottom
 	// If going up, update from bottom to top
@@ -655,24 +655,24 @@ void ImageGridComponent<T>::updateTileAtPos(int tilePos, int imgPos, bool allowA
 		else if (mEntries.at(imgPos).object->getType() == 2)
 			tile->setImage(mDefaultFolderTexture);
 		else
-			tile->setImage(mDefaultGameTexture);
+		tile->setImage(mDefaultGameTexture);
 
 		if (updateSelectedState)
-		{
-			if (imgPos == mCursor && mCursor != mLastCursor)
 			{
-				int dif = mCursor - tilePos;
-				int idx = mLastCursor - dif;
+				if (imgPos == mCursor && mCursor != mLastCursor)
+				{
+					int dif = mCursor - tilePos;
+					int idx = mLastCursor - dif;
 
-				if (idx < 0 || idx >= mTiles.size())
-					idx = 0;
+					if (idx < 0 || idx >= mTiles.size())
+						idx = 0;
 
-				Vector3f pos = mTiles.at(idx)->getBackgroundPosition();
-				tile->setSelected(true, allowAnimation, &pos);
+					Vector3f pos = mTiles.at(idx)->getBackgroundPosition();
+					tile->setSelected(true, allowAnimation, &pos);
+				}
+				else
+					tile->setSelected(imgPos == mCursor, allowAnimation);
 			}
-			else
-				tile->setSelected(imgPos == mCursor, allowAnimation);
-		}
 
 	}
 }
@@ -699,20 +699,20 @@ void ImageGridComponent<T>::calcGridDimension()
 	if (mGridDimension.y() < 1)
 		LOG(LogError) << "Theme defined grid Y dimension below 1";
 
-	// Add extra tiles to both sides : Add EXTRAITEMS before, EXTRAITEMS after
-	if (isVertical())
-		mGridDimension.y() += 2 * EXTRAITEMS;
-	else
-		mGridDimension.x() += 2 * EXTRAITEMS;
-}
+		// Add extra tiles to both sides : Add EXTRAITEMS before, EXTRAITEMS after
+		if (isVertical())
+			mGridDimension.y() += 2 * EXTRAITEMS;
+		else
+			mGridDimension.x() += 2 * EXTRAITEMS;
+	}
 
-template<typename T>
-bool ImageGridComponent<T>::isScrollLoop() {
-	if (!mScrollLoop)
-		return false;
-	if (isVertical())
-		return (mGridDimension.x() * (mGridDimension.y() - 2 * EXTRAITEMS)) <= mEntries.size();
-	return (mGridDimension.y() * (mGridDimension.x() - 2 * EXTRAITEMS)) <= mEntries.size();
-};
+	template<typename T>
+	bool ImageGridComponent<T>::isScrollLoop() {
+		if (!mScrollLoop)
+			return false;
+		if (isVertical())
+			return (mGridDimension.x() * (mGridDimension.y() - 2 * EXTRAITEMS)) <= mEntries.size();
+		return (mGridDimension.y() * (mGridDimension.x() - 2 * EXTRAITEMS)) <= mEntries.size();
+	};
 
 #endif // ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H

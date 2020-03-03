@@ -64,7 +64,7 @@ bool SystemScreenSaver::isScreenSaverActive()
 void SystemScreenSaver::startScreenSaver()
 {
 	std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
-	if (!mVideoScreensaver && (screensaver_behavior == "random video"))
+	if (!mVideoScreensaver && (screensaver_behavior == "video al azar"))
 	{
 		// Configure to fade out the windows, Skip Fading if Instant mode
 		mState =  PowerSaver::getMode() == PowerSaver::INSTANT
@@ -116,7 +116,7 @@ void SystemScreenSaver::startScreenSaver()
 			return;
 		}
 	}
-	else if (screensaver_behavior == "slideshow")
+	else if (screensaver_behavior == "diapositivas")
 	{
 		// Configure to fade out the windows, Skip Fading if Instant mode
 		mState =  PowerSaver::getMode() == PowerSaver::INSTANT
@@ -205,7 +205,7 @@ void SystemScreenSaver::stopScreenSaver()
 void SystemScreenSaver::renderScreenSaver()
 {
 	std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
-	if (mVideoScreensaver && screensaver_behavior == "random video")
+	if (mVideoScreensaver && screensaver_behavior == "video al azar")
 	{
 		// Render black background
 		Renderer::setMatrix(Transform4x4f::Identity());
@@ -218,7 +218,7 @@ void SystemScreenSaver::renderScreenSaver()
 			mVideoScreensaver->render(transform);
 		}
 	}
-	else if (mImageScreensaver && screensaver_behavior == "slideshow")
+	else if (mImageScreensaver && screensaver_behavior == "diapositivas")
 	{
 		// Render black background
 		Renderer::setMatrix(Transform4x4f::Identity());
@@ -330,9 +330,9 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 					mCurrentGame = (*itf);
 
 					// end of getting FileData
-					if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
+					if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "nunca")
 						writeSubtitle(mGameName.c_str(), mSystemName.c_str(),
-							(Settings::getInstance()->getString("ScreenSaverGameInfo") == "always"));
+							(Settings::getInstance()->getString("ScreenSaverGameInfo") == "siempre"));
 					return;
 				}
 			}

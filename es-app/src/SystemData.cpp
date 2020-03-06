@@ -230,11 +230,10 @@ bool SystemData::loadConfig()
 			}
 
 			// if there appears to be an actual platform ID supplied but it didn't match the list, warn
-			if (platformId != PlatformIds::PLATFORM_UNKNOWN)
-				platformIds.push_back(platformId);
-			else if (str != NULL && str[0] != '\0' && platformId == PlatformIds::PLATFORM_UNKNOWN)
+			if(str != NULL && str[0] != '\0' && platformId == PlatformIds::PLATFORM_UNKNOWN)
 				LOG(LogWarning) << "  Unknown platform for system \"" << name << "\" (platform \"" << str << "\" from list \"" << platformList << "\")";
-
+			else if(platformId != PlatformIds::PLATFORM_UNKNOWN)
+				platformIds.push_back(platformId);
 		}
 
 		// theme folder

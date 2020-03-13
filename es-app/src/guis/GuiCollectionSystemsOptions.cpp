@@ -77,7 +77,7 @@ void GuiCollectionSystemsOptions::initializeMenu()
 
 	toggleSystemNameInCollections = std::make_shared<SwitchComponent>(mWindow);
 	toggleSystemNameInCollections->setState(Settings::getInstance()->getBool("CollectionShowSystemInfo"));
-	mMenu.addWithLabel("SHOW SYSTEM NAME IN COLLECTIONS", toggleSystemNameInCollections);
+	mMenu.addWithLabel("VER NOMBRE DEL SISTEMA EN LAS COLECCIONES", toggleSystemNameInCollections);
 
 	if(CollectionSystemManager::get()->isEditing())
 	{
